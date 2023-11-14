@@ -28,6 +28,7 @@ public class Reservación extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jToolBar1 = new javax.swing.JToolBar();
         lblRegresarReservacionBotonImagen = new javax.swing.JLabel();
         lblTituloReservacion = new javax.swing.JLabel();
         jLabelCorreoReservacion1 = new javax.swing.JLabel();
@@ -39,6 +40,8 @@ public class Reservación extends javax.swing.JFrame {
         jLabelCorreoReservacion = new javax.swing.JLabel();
         jTextFieldCorreoReservacion = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+
+        jToolBar1.setRollover(true);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,7 +94,6 @@ public class Reservación extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabelReservacionNombre)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextFieldNombreReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -193,6 +195,7 @@ public class Reservación extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldCorreoReservacion;
     private javax.swing.JTextField jTextFieldCorreoReservacion1;
     private javax.swing.JTextField jTextFieldNombreReservacion;
+    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lblRegresarReservacionBotonImagen;
     private javax.swing.JLabel lblTituloReservacion;
     // End of variables declaration//GEN-END:variables

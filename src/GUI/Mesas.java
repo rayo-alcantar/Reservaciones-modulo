@@ -48,12 +48,12 @@ public class Mesas extends javax.swing.JFrame {
 
                 switch (estado) {
                     case 1:
-                        setMesaImageIcon("Disponible.png", jLabelMesa1);
-                        setMesaImageIcon("Ocupado.png", jLabelMesa2);
+                        setMesaImageIcon("MesaDisponible.png", jLabelMesa1);
+                        setMesaImageIcon("MesaOcupada.png", jLabelMesa2);
                         break;
                     case 2:
-                        setMesaImageIcon("Ocupado.png", jLabelMesa1);
-                        setMesaImageIcon("EnProceso.png", jLabelMesa2);
+                        setMesaImageIcon("MesaOcupada.png", jLabelMesa1);
+                        setMesaImageIcon("MesaProceso.png", jLabelMesa2);
                         break;
                     // Mas Cases si es que se ocupa
                     default:
@@ -87,7 +87,7 @@ public class Mesas extends javax.swing.JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 //Checar el estado de la mesa
-                if (isImageState("Disponible.png", jLabelMesa1)) {
+                if (isImageState("MesaDisponible.png", jLabelMesa1)) {
                     showConfirmationDialog();
                 } else {
                     openReservacion();
@@ -99,7 +99,7 @@ public class Mesas extends javax.swing.JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 //Checar el estado de la mesa
-                if (isImageState("Disponible.png", jLabelMesa2)) {
+                if (isImageState("MesaDisponible.png", jLabelMesa2)) {
                     showConfirmationDialog();
                 } else {
                     openReservacion();
@@ -116,7 +116,7 @@ public class Mesas extends javax.swing.JFrame {
 
     private boolean isImageState(String imageName, JLabel mesaLabel) {
         //Obtener el estado de la mesa, con el nombre de la imagen
-        return imageName.equals("Disponible.png") && mesaLabel.getIcon() != null && mesaLabel.getIcon().toString().endsWith(imageName);
+        return imageName.equals("MesaDisponible.png") && mesaLabel.getIcon() != null && mesaLabel.getIcon().toString().endsWith(imageName);
     }
 
     private void showConfirmationDialog() {
@@ -164,12 +164,13 @@ public class Mesas extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabelMesa1 = new javax.swing.JLabel();
         jLabelMesa2 = new javax.swing.JLabel();
+        jCheckBoxMesa1 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(51, 255, 255));
         setForeground(new java.awt.Color(102, 255, 255));
 
-        jPanel1.setBackground(new java.awt.Color(102, 204, 255));
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
         lblRegresarBotonImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/BotonRegresar.png"))); // NOI18N
         lblRegresarBotonImagen.setText("Regresar");
@@ -185,6 +186,11 @@ public class Mesas extends javax.swing.JFrame {
 
         jLabelMesa2.setText("Mesa2");
 
+        jCheckBoxMesa1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/MesaDisponible.png"))); // NOI18N
+        jCheckBoxMesa1.setMaximumSize(new java.awt.Dimension(100, 100));
+        jCheckBoxMesa1.setMinimumSize(new java.awt.Dimension(100, 100));
+        jCheckBoxMesa1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/MesaDisponibleS.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -197,11 +203,14 @@ public class Mesas extends javax.swing.JFrame {
                         .addGap(202, 202, 202)
                         .addComponent(jLabel1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(98, 98, 98)
-                        .addComponent(jLabelMesa1)
-                        .addGap(263, 263, 263)
-                        .addComponent(jLabelMesa2)))
-                .addContainerGap(413, Short.MAX_VALUE))
+                        .addGap(80, 80, 80)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBoxMesa1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabelMesa1)
+                                .addGap(335, 335, 335)
+                                .addComponent(jLabelMesa2)))))
+                .addContainerGap(317, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -210,12 +219,16 @@ public class Mesas extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblRegresarBotonImagen)
                     .addComponent(jLabel1))
-                .addGap(92, 92, 92)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxMesa1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelMesa1)
                     .addComponent(jLabelMesa2))
-                .addContainerGap(370, Short.MAX_VALUE))
+                .addContainerGap(227, Short.MAX_VALUE))
         );
+
+        jCheckBoxMesa1.getAccessibleContext().setAccessibleName("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -223,15 +236,15 @@ public class Mesas extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -279,6 +292,7 @@ public class Mesas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBoxMesa1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelMesa1;
     private javax.swing.JLabel jLabelMesa2;
