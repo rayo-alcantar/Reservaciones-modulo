@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Pedro Quiroz
@@ -28,7 +29,7 @@ public class Sucursales extends javax.swing.JFrame {
     }    
     
      private void loadRestaurantes() {
-         // Initialize the connection
+         //Inicializar la conexión a la base de datos
         Connection connection = conexion.getConnection();
 
         try (Connection conn = connection;
@@ -48,20 +49,28 @@ public class Sucursales extends javax.swing.JFrame {
     }
      
     private void addListSelectionListener() {
-        lstRestaurantes.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    // Get the selected item
-                    String selectedRestaurant = lstRestaurantes.getSelectedValue();
+    lstRestaurantes.addListSelectionListener(new ListSelectionListener() {
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if (!e.getValueIsAdjusting()) {
+                //Obtener sucursal seleccionada 
+                String selectedRestaurant = lstRestaurantes.getSelectedValue();
 
-                    // Open the Mesas JFrame with the selected restaurant information
+                //Ventana de confirmación
+                int option = JOptionPane.showConfirmDialog(Sucursales.this,
+                        "Acceder sucursal " + selectedRestaurant + "?",
+                        "Confirmación", JOptionPane.YES_NO_OPTION);
+
+                if (option == JOptionPane.YES_OPTION) {
+                    //Se abre el jFrame de mesas de la sucursal seleccionada.
                     Mesas mesasFrame = new Mesas(selectedRestaurant);
                     mesasFrame.setVisible(true);
                 }
             }
-        });
-    }
+        }
+    });
+}
+
  
     /**
      * This method is called from within the constructor to initialize the form.
