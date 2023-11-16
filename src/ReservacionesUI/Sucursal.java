@@ -1,77 +1,104 @@
-package GUI;
+package ReservacionesUI;
 
 import conexion.ConexionBD;
+
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.DefaultListModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author Pedro Quiroz
  */
-public class Sucursales extends javax.swing.JFrame {
-    ConexionBD conexion = new ConexionBD();
-    DefaultListModel<String> model = new DefaultListModel<>();
-    
+public class Sucursal extends javax.swing.JFrame {
+
     /**
-     * Creates new form Sucursales
+     * Creates new form Sucursal
      */
-    public Sucursales() {
+    public Sucursal() {
         initComponents();
         loadRestaurantes();
         addListSelectionListener();
-    }    
-    
-     private void loadRestaurantes() {
-         //Inicializar la conexión a la base de datos
-        Connection connection = conexion.getConnection();
+    }
 
-        try (Connection conn = connection;
-             PreparedStatement stmt = conn.prepareStatement("SELECT nombre FROM sucursal");
-             ResultSet rs = stmt.executeQuery()) {
+    private void loadRestaurantes() {
+        List<String> restaurantes = new ArrayList<>();
 
-            while (rs.next()) {
-                String nombre = rs.getString("nombre");
-                model.addElement(nombre);
+        try ( Connection connection = ConexionBD.getConnection()) {
+            String sql = "SELECT nombre FROM sucursal";
+            try ( PreparedStatement statement = connection.prepareStatement(sql)) {
+                try ( ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        String nombre = resultSet.getString("nombre");
+                        restaurantes.add(nombre);
+                    }
+                }
             }
-
-            lstRestaurantes.setModel(model);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        // Populate the JList
+        lstRestaurantes.setListData(restaurantes.toArray(new String[0]));
     }
-     
+
     private void addListSelectionListener() {
-    lstRestaurantes.addListSelectionListener(new ListSelectionListener() {
-        @Override
-        public void valueChanged(ListSelectionEvent e) {
-            if (!e.getValueIsAdjusting()) {
-                //Obtener sucursal seleccionada 
-                String selectedRestaurant = lstRestaurantes.getSelectedValue();
+        lstRestaurantes.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    // Get the selected restaurant's idSucursal
+                    int selectedIndex = lstRestaurantes.getSelectedIndex();
+                    if (selectedIndex != -1) {
+                        String selectedRestaurant = lstRestaurantes.getSelectedValue();
+                        int idSucursal = getIdSucursal(selectedRestaurant);
 
-                //Ventana de confirmación
-                int option = JOptionPane.showConfirmDialog(Sucursales.this,
-                        "Acceder sucursal " + selectedRestaurant + "?",
-                        "Confirmación", JOptionPane.YES_NO_OPTION);
-
-                if (option == JOptionPane.YES_OPTION) {
-                    //Se abre el jFrame de mesas de la sucursal seleccionada.
-                    Mesas mesasFrame = new Mesas(selectedRestaurant);
-                    mesasFrame.setVisible(true);
+                        // Pass idSucursal to MesaReservacion
+                        openMesaReservacion(idSucursal);
+                    }
                 }
             }
-        }
-    });
-}
+        });
+    }
 
- 
+    private int getIdSucursal(String nombreRestaurante) {
+        int idSucursal = -1;
+
+        try ( Connection connection = ConexionBD.getConnection()) {
+            String sql = "SELECT idSucursal FROM sucursal WHERE nombre = ?";
+            try ( PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, nombreRestaurante);
+                try ( ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        idSucursal = resultSet.getInt("idSucursal");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return idSucursal;
+    }
+
+    private void openMesaReservacion(int idSucursal) {
+        int response = JOptionPane.showConfirmDialog
+        (this, "Acceder a Sucursal " + idSucursal + "?", "Confirmación", JOptionPane.YES_NO_OPTION);
+
+        if (response == JOptionPane.YES_OPTION) {
+            MesaReservacion mesaReservacion = new MesaReservacion(idSucursal);
+            mesaReservacion.setVisible(true);
+        } else {
+            
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -81,23 +108,23 @@ public class Sucursales extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblNeoTokyo = new javax.swing.JLabel();
+        lblRestaurantes = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstRestaurantes = new javax.swing.JList<>();
-        lblRestaurantes = new javax.swing.JLabel();
-        lblNeoTokyo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        lstRestaurantes.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
-        jScrollPane1.setViewportView(lstRestaurantes);
-
-        lblRestaurantes.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
-        lblRestaurantes.setText("Sucursales");
 
         lblNeoTokyo.setBackground(new java.awt.Color(255, 0, 153));
         lblNeoTokyo.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 48)); // NOI18N
         lblNeoTokyo.setForeground(new java.awt.Color(255, 0, 153));
         lblNeoTokyo.setText("Neo Tokyo");
+
+        lblRestaurantes.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        lblRestaurantes.setText("Sucursales");
+
+        lstRestaurantes.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jScrollPane1.setViewportView(lstRestaurantes);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -107,8 +134,8 @@ public class Sucursales extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblNeoTokyo, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblRestaurantes))
+                    .addComponent(lblRestaurantes)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -119,7 +146,7 @@ public class Sucursales extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblRestaurantes)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -143,20 +170,20 @@ public class Sucursales extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Sucursales.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Sucursal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Sucursales.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Sucursal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Sucursales.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Sucursal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Sucursales.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Sucursal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Sucursales().setVisible(true);
+                new Sucursal().setVisible(true);
             }
         });
     }

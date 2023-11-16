@@ -1,21 +1,22 @@
-package GUI;
+package ReservacionesUI;
 
 /**
  *
  * @author Pedro Quiroz
  */
-public class Reservación extends javax.swing.JFrame {
-    private String selectedRestaurant;
+public class Reservacion extends javax.swing.JFrame {
+    
+     private final int idMesa;
 
     /**
-     * Creates new form Reservación
+     * Creates new form Reservacion
      */
-    public Reservación(String selectedRestaurant) {
+    public Reservacion(int idMesa) {
+        this.idMesa = idMesa;
         initComponents();
-        this.selectedRestaurant = selectedRestaurant;
     }
 
-    private Reservación() {
+    Reservacion() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -28,22 +29,32 @@ public class Reservación extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jToolBar1 = new javax.swing.JToolBar();
+        jLabelApellidosReservacion = new javax.swing.JLabel();
+        jTextFieldApellidosReservacion = new javax.swing.JTextField();
+        jLabelCorreoReservacion = new javax.swing.JLabel();
+        jTextFieldCorreoReservacion = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         lblRegresarReservacionBotonImagen = new javax.swing.JLabel();
         lblTituloReservacion = new javax.swing.JLabel();
         jLabelCorreoReservacion1 = new javax.swing.JLabel();
         jTextFieldCorreoReservacion1 = new javax.swing.JTextField();
         jLabelReservacionNombre = new javax.swing.JLabel();
         jTextFieldNombreReservacion = new javax.swing.JTextField();
-        jLabelApellidosReservacion = new javax.swing.JLabel();
-        jTextFieldApellidosReservacion = new javax.swing.JTextField();
-        jLabelCorreoReservacion = new javax.swing.JLabel();
-        jTextFieldCorreoReservacion = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-
-        jToolBar1.setRollover(true);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabelApellidosReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        jLabelApellidosReservacion.setText("Apellidos:");
+
+        jTextFieldApellidosReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+
+        jLabelCorreoReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        jLabelCorreoReservacion.setText("Correo:");
+
+        jTextFieldCorreoReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+
+        jButton1.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
+        jButton1.setText("RESERVAR");
 
         lblRegresarReservacionBotonImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/BotonRegresar.png"))); // NOI18N
         lblRegresarReservacionBotonImagen.setText("Regresar");
@@ -66,19 +77,6 @@ public class Reservación extends javax.swing.JFrame {
 
         jTextFieldNombreReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
 
-        jLabelApellidosReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-        jLabelApellidosReservacion.setText("Apellidos:");
-
-        jTextFieldApellidosReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-
-        jLabelCorreoReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-        jLabelCorreoReservacion.setText("Correo:");
-
-        jTextFieldCorreoReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-
-        jButton1.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
-        jButton1.setText("RESERVAR");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -90,7 +88,7 @@ public class Reservación extends javax.swing.JFrame {
                         .addComponent(lblRegresarReservacionBotonImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblTituloReservacion)
-                        .addGap(0, 19, Short.MAX_VALUE))
+                        .addGap(0, 26, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -139,7 +137,7 @@ public class Reservación extends javax.swing.JFrame {
                     .addComponent(jLabelCorreoReservacion1))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();
@@ -167,20 +165,20 @@ public class Reservación extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Reservación.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Reservacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Reservación.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Reservacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Reservación.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Reservacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Reservación.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Reservacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Reservación().setVisible(true);
+                new Reservacion().setVisible(true);
             }
         });
     }
@@ -195,7 +193,6 @@ public class Reservación extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldCorreoReservacion;
     private javax.swing.JTextField jTextFieldCorreoReservacion1;
     private javax.swing.JTextField jTextFieldNombreReservacion;
-    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lblRegresarReservacionBotonImagen;
     private javax.swing.JLabel lblTituloReservacion;
     // End of variables declaration//GEN-END:variables

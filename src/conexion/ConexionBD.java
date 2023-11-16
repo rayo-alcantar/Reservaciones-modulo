@@ -105,4 +105,14 @@ public class ConexionBD {
             System.out.println("Error al conectarse a la base de datos.");
         }
     }
+
+    public static void closeConnection(Connection connection) {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception appropriately in your application
+        }
+    }
 }
