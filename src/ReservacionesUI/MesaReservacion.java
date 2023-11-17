@@ -498,7 +498,7 @@ public class MesaReservacion extends javax.swing.JFrame {
 
     private void jButtonReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReservarActionPerformed
         // TODO add your handling code here:
-        if (selectedIdMesa != -1) {
+        if (selectedIdMesa != 1) {
             // Check the estado of the selected mesa
             int estadoMesa = getEstadoMesa(selectedIdMesa);
 
@@ -510,6 +510,8 @@ public class MesaReservacion extends javax.swing.JFrame {
             } else {
                 // Perform reservation logic here if the mesa is available
                 System.out.println("Reserving mesa " + selectedIdMesa);
+                Reservacion ventanaR = new Reservacion ();
+                ventanaR.setVisible(true);
             }
         } else {
             // No mesa selected, show an error message

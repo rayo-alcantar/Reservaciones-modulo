@@ -1,5 +1,12 @@
 package ReservacionesUI;
 
+import conexion.ConexionBD;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Pedro Quiroz
@@ -19,6 +26,31 @@ public class Reservacion extends javax.swing.JFrame {
     Reservacion() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
+    public void existenciaSQL(){
+        try{
+            String nombre = new String(txtNombre.getText());
+            String Apellidos = new String(txtApellidos.getText());
+            String Correo = new String(txtCorreo.getText());
+            Connection connection = ConexionBD.getConnection();
+            String sql = "SELECT * FROM clientes WHERE nombre = ? AND apellidos = ? AND  telefono = ? AND correo = ? ";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, nombre);
+            statement.setString(2, Apellidos);
+            statement.setString(3, Correo);
+            ResultSet rs = statement.executeQuery();
+            
+            if(rs.next()){
+            JOptionPane.showMessageDialog(null, "Confirmacion Completada!!, SE HA RESERVADO TU MESA", "Reservacion", JOptionPane.INFORMATION_MESSAGE);    
+            
+            }else{
+                
+            }
+            
+        }catch(SQLException e){
+            
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -30,28 +62,28 @@ public class Reservacion extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabelApellidosReservacion = new javax.swing.JLabel();
-        jTextFieldApellidosReservacion = new javax.swing.JTextField();
+        txtApellidos = new javax.swing.JTextField();
         jLabelCorreoReservacion = new javax.swing.JLabel();
-        jTextFieldCorreoReservacion = new javax.swing.JTextField();
+        txtCorreo = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         lblRegresarReservacionBotonImagen = new javax.swing.JLabel();
         lblTituloReservacion = new javax.swing.JLabel();
         jLabelCorreoReservacion1 = new javax.swing.JLabel();
-        jTextFieldCorreoReservacion1 = new javax.swing.JTextField();
+        txtTelefono = new javax.swing.JTextField();
         jLabelReservacionNombre = new javax.swing.JLabel();
-        jTextFieldNombreReservacion = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabelApellidosReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         jLabelApellidosReservacion.setText("Apellidos:");
 
-        jTextFieldApellidosReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtApellidos.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
 
         jLabelCorreoReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         jLabelCorreoReservacion.setText("Correo:");
 
-        jTextFieldCorreoReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtCorreo.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
 
         jButton1.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
         jButton1.setText("RESERVAR");
@@ -70,12 +102,13 @@ public class Reservacion extends javax.swing.JFrame {
         jLabelCorreoReservacion1.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         jLabelCorreoReservacion1.setText("Telefono:");
 
-        jTextFieldCorreoReservacion1.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtTelefono.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
 
         jLabelReservacionNombre.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         jLabelReservacionNombre.setText("Nombre:");
 
-        jTextFieldNombreReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtNombre.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtNombre.setName("txtNombre"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -94,7 +127,7 @@ public class Reservacion extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabelReservacionNombre)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldNombreReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabelCorreoReservacion)
@@ -102,9 +135,9 @@ public class Reservacion extends javax.swing.JFrame {
                                     .addComponent(jLabelCorreoReservacion1))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextFieldApellidosReservacion)
-                                    .addComponent(jTextFieldCorreoReservacion)
-                                    .addComponent(jTextFieldCorreoReservacion1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(txtApellidos)
+                                    .addComponent(txtCorreo)
+                                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(164, 164, 164)
@@ -122,18 +155,18 @@ public class Reservacion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelReservacionNombre)
-                    .addComponent(jTextFieldNombreReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldApellidosReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelApellidosReservacion))
                 .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldCorreoReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelCorreoReservacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldCorreoReservacion1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelCorreoReservacion1))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
@@ -189,11 +222,11 @@ public class Reservacion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelCorreoReservacion;
     private javax.swing.JLabel jLabelCorreoReservacion1;
     private javax.swing.JLabel jLabelReservacionNombre;
-    private javax.swing.JTextField jTextFieldApellidosReservacion;
-    private javax.swing.JTextField jTextFieldCorreoReservacion;
-    private javax.swing.JTextField jTextFieldCorreoReservacion1;
-    private javax.swing.JTextField jTextFieldNombreReservacion;
     private javax.swing.JLabel lblRegresarReservacionBotonImagen;
     private javax.swing.JLabel lblTituloReservacion;
+    private javax.swing.JTextField txtApellidos;
+    private javax.swing.JTextField txtCorreo;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }
