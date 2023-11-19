@@ -108,46 +108,66 @@ public class Sucursal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblNeoTokyo = new javax.swing.JLabel();
-        lblRestaurantes = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstRestaurantes = new javax.swing.JList<>();
+        lblRestaurantes = new javax.swing.JLabel();
+        jLabelImagen = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lblNeoTokyo.setBackground(new java.awt.Color(255, 0, 153));
-        lblNeoTokyo.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 48)); // NOI18N
-        lblNeoTokyo.setForeground(new java.awt.Color(255, 0, 153));
-        lblNeoTokyo.setText("Neo Tokyo");
+        jPanel1.setBackground(new java.awt.Color(32, 17, 72));
 
-        lblRestaurantes.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        lstRestaurantes.setBackground(new java.awt.Color(32, 17, 72));
+        lstRestaurantes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(85, 231, 255)));
+        lstRestaurantes.setFont(new java.awt.Font("Bahiana", 0, 31)); // NOI18N
+        lstRestaurantes.setForeground(new java.awt.Color(255, 255, 255));
+        jScrollPane1.setViewportView(lstRestaurantes);
+
+        lblRestaurantes.setFont(new java.awt.Font("Bahiana", 0, 48)); // NOI18N
+        lblRestaurantes.setForeground(new java.awt.Color(85, 231, 255));
         lblRestaurantes.setText("Sucursales");
 
-        lstRestaurantes.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
-        jScrollPane1.setViewportView(lstRestaurantes);
+        jLabelImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/NeoTokyoLogo.png"))); // NOI18N
+        jLabelImagen.setPreferredSize(new java.awt.Dimension(500, 500));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabelImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(293, 293, 293)
+                        .addComponent(lblRestaurantes))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 646, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(32, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(lblRestaurantes)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 19, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNeoTokyo, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblRestaurantes)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblNeoTokyo, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblRestaurantes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -189,8 +209,9 @@ public class Sucursal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabelImagen;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblNeoTokyo;
     private javax.swing.JLabel lblRestaurantes;
     private javax.swing.JList<String> lstRestaurantes;
     // End of variables declaration//GEN-END:variables
