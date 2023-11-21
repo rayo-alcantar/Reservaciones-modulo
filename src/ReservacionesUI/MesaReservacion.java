@@ -591,6 +591,7 @@ public class MesaReservacion extends javax.swing.JFrame {
                 System.out.println("Reserving mesas: " + selectedTables);
                 
                 int respuesta = JOptionPane.showConfirmDialog(null, "¿Eres cliente?", "Reservacion", JOptionPane.INFORMATION_MESSAGE);
+                
                 if(respuesta == JOptionPane.YES_NO_OPTION){
                 Reservacion ventanaR = new Reservacion();
                 ventanaR.setMesas(selectedTables); // Pass the selected tables to the Reservacion frame
