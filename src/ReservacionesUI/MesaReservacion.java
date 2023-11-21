@@ -274,7 +274,7 @@ public class MesaReservacion extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(32, 17, 72));
 
         jButtonReservar.setBackground(new java.awt.Color(85, 231, 255));
-        jButtonReservar.setFont(new java.awt.Font("Barlow Condensed", 0, 60)); // NOI18N
+        jButtonReservar.setFont(new java.awt.Font("Barlow Condensed", 0, 36)); // NOI18N
         jButtonReservar.setForeground(new java.awt.Color(32, 17, 72));
         jButtonReservar.setText("RESERVAR");
         jButtonReservar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -477,9 +477,9 @@ public class MesaReservacion extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(36, 36, 36)
                         .addComponent(jButtonReservar, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(163, 163, 163)
+                .addGap(178, 178, 178)
                 .addComponent(jPanelAreaA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46)
+                .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanelAreaB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanelAreaC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -503,12 +503,12 @@ public class MesaReservacion extends javax.swing.JFrame {
                         .addComponent(jButtonReservar, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanelAreaA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jPanelAreaC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jPanelAreaB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addComponent(jPanelAreaC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanelAreaB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(jPanelAreaA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -589,9 +589,16 @@ public class MesaReservacion extends javax.swing.JFrame {
             if (allTablesAvailable) {
                 // Perform reservation logic here for all selected tables
                 System.out.println("Reserving mesas: " + selectedTables);
+                
+                int respuesta = JOptionPane.showConfirmDialog(null, "¿Eres cliente?", "Reservacion", JOptionPane.INFORMATION_MESSAGE);
+                if(respuesta == JOptionPane.YES_NO_OPTION){
                 Reservacion ventanaR = new Reservacion();
                 ventanaR.setMesas(selectedTables); // Pass the selected tables to the Reservacion frame
                 ventanaR.setVisible(true);
+                }else{
+                    
+                }
+                
             } else {
                 // Show an error message if any selected table is occupied
                 JOptionPane.showMessageDialog(this, "Alguna mesa seleccionada está ocupada, por favor selecciona mesas disponibles.",

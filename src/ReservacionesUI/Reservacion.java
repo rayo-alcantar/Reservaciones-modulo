@@ -5,6 +5,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -14,6 +17,8 @@ import javax.swing.JOptionPane;
  */
 public class Reservacion extends javax.swing.JFrame {
 
+    private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private DateFormat horaFormat = new SimpleDateFormat("HH:mm:ss");
     private final int idMesa;
     private List<Integer> selectedTables;
 
@@ -28,6 +33,20 @@ public class Reservacion extends javax.swing.JFrame {
     Reservacion() {
         this.idMesa = 0; // Provide a default value or update as needed
         initComponents();
+        iniciarFechaYHora();
+    }
+    
+    private void iniciarFechaYHora(){
+        
+        Date date = new Date();
+        String fecha = dateFormat.format(date);
+        
+        
+        Date horario = new Date();
+        String hora = horaFormat.format(horario);
+        
+        
+        
     }
 
     public void setMesas(List<Integer> selectedTables) {
@@ -42,7 +61,7 @@ public class Reservacion extends javax.swing.JFrame {
             for (Integer mesa : selectedTables) {
                 // You should add your logic here to update the estado of the mesa in the database
                 // For demonstration purposes, let's assume a simple update query
-                String updateSql = "UPDATE mesas SET estado = ? WHERE id_mesa = ?";
+                String updateSql = "UPDATE mesa SET estado = ? WHERE idMesa = ?";
                 PreparedStatement updateStatement = connection.prepareStatement(updateSql);
                 updateStatement.setInt(1, 2); // Assuming 2 represents the reserved state
                 updateStatement.setInt(2, mesa);
@@ -61,30 +80,46 @@ public class Reservacion extends javax.swing.JFrame {
         }
     }
 
-    public void existenciaSQL() {
-        try {
+     public int consultarIDC(){
+         int idc=0;
+         try {
+             /*TELEFONO: 449283748392*/
+             
             String nombre = new String(txtNombre.getText());
             String Apellidos = new String(txtApellidos.getText());
+            String telefono = new String(txtTelefono.getText());
             String Correo = new String(txtCorreo.getText());
             Connection connection = ConexionBD.getConnection();
-            String sql = "SELECT * FROM clientes WHERE nombre = ? AND apellidos = ? AND  telefono = ? AND correo = ? ";
+            String sql = "SELECT idCliente FROM cliente WHERE nombre = ? AND apellidos = ? AND  telefono = ? AND correo = ? ";
             PreparedStatement statement = connection.prepareStatement(sql);
+            
             statement.setString(1, nombre);
             statement.setString(2, Apellidos);
-            statement.setString(3, Correo);
+            statement.setString(3, telefono);
+            statement.setString(4, Correo);
             ResultSet rs = statement.executeQuery();
-
+            
             if (rs.next()) {
-                JOptionPane.showMessageDialog(null, "Confirmacion Completada!!, SE HA RESERVADO TU MESA", "Reservacion", JOptionPane.INFORMATION_MESSAGE);
-
-            } else {
+                idc = rs.getInt("idCliente");
+                
+                realizarReservacion();
+            }else{
+                JOptionPane.showMessageDialog(this, "No se encontro el cliente, verifique los datos", "Error", JOptionPane.ERROR_MESSAGE);
 
             }
+            
+            
+            
 
         } catch (SQLException e) {
-
+             System.out.println(e);
         }
-    }
+         
+         
+         return idc;
+     }
+     
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -121,6 +156,11 @@ public class Reservacion extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
         jButton1.setText("RESERVAR");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         lblRegresarReservacionBotonImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/BotonRegresar.png"))); // NOI18N
         lblRegresarReservacionBotonImagen.setText("Regresar");
@@ -214,6 +254,12 @@ public class Reservacion extends javax.swing.JFrame {
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_lblRegresarReservacionBotonImagenMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+        
+        consultarIDC();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
