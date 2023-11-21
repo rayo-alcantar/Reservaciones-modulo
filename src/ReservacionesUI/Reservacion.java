@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,8 +13,9 @@ import javax.swing.JOptionPane;
  * @author Pedro Quiroz
  */
 public class Reservacion extends javax.swing.JFrame {
-    
-     private final int idMesa;
+
+    private final int idMesa;
+    private List<Integer> selectedTables;
 
     /**
      * Creates new form Reservacion
@@ -24,11 +26,43 @@ public class Reservacion extends javax.swing.JFrame {
     }
 
     Reservacion() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.idMesa = 0; // Provide a default value or update as needed
+        initComponents();
+    }
+
+    public void setMesas(List<Integer> selectedTables) {
+        this.selectedTables = selectedTables;
     }
     
-    public void existenciaSQL(){
-        try{
+     private void realizarReservacion() {
+        try {
+            Connection connection = ConexionBD.getConnection();
+
+            // Iterate through selected tables and perform reservation logic
+            for (Integer mesa : selectedTables) {
+                // You should add your logic here to update the estado of the mesa in the database
+                // For demonstration purposes, let's assume a simple update query
+                String updateSql = "UPDATE mesas SET estado = ? WHERE id_mesa = ?";
+                PreparedStatement updateStatement = connection.prepareStatement(updateSql);
+                updateStatement.setInt(1, 2); // Assuming 2 represents the reserved state
+                updateStatement.setInt(2, mesa);
+                updateStatement.executeUpdate();
+            }
+
+            // Display a message or perform any additional logic as needed
+            JOptionPane.showMessageDialog(this, "Reservación realizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            // Optionally, you might want to close the current frame after reservation
+            this.dispose();
+
+        } catch (SQLException e) {
+            // Handle database-related exceptions
+            e.printStackTrace(); // You might want to handle exceptions more gracefully in a real application
+            JOptionPane.showMessageDialog(this, "Error en la reserva, por favor inténtalo de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void existenciaSQL() {
+        try {
             String nombre = new String(txtNombre.getText());
             String Apellidos = new String(txtApellidos.getText());
             String Correo = new String(txtCorreo.getText());
@@ -39,16 +73,16 @@ public class Reservacion extends javax.swing.JFrame {
             statement.setString(2, Apellidos);
             statement.setString(3, Correo);
             ResultSet rs = statement.executeQuery();
-            
-            if(rs.next()){
-            JOptionPane.showMessageDialog(null, "Confirmacion Completada!!, SE HA RESERVADO TU MESA", "Reservacion", JOptionPane.INFORMATION_MESSAGE);    
-            
-            }else{
-                
+
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(null, "Confirmacion Completada!!, SE HA RESERVADO TU MESA", "Reservacion", JOptionPane.INFORMATION_MESSAGE);
+
+            } else {
+
             }
-            
-        }catch(SQLException e){
-            
+
+        } catch (SQLException e) {
+
         }
     }
 
@@ -229,4 +263,5 @@ public class Reservacion extends javax.swing.JFrame {
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
+
 }

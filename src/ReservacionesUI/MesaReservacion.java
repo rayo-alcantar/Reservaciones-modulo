@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
@@ -29,10 +31,39 @@ public class MesaReservacion extends javax.swing.JFrame {
         this.idSucursal = idSucursal;
         initComponents();
         loadMesas();
+        loadInformacionSucursal();
     }
 
     private MesaReservacion() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void loadInformacionSucursal() {
+        Connection connection = ConexionBD.getConnection();
+        String query = "SELECT nombre, direccion, telefono FROM sucursal WHERE idSucursal = ?";
+
+        try ( PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, idSucursal);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String nombre = resultSet.getString("nombre");
+                String direccion = resultSet.getString("direccion");
+                String telefono = resultSet.getString("telefono");
+
+                // Set the values to the corresponding labels
+                jLabelSucursal.setText(nombre);
+                jLabelDireccion.setText("Direccion: " +direccion);
+                jLabelTelefono.setText("Telefono: " +telefono);
+            } else {
+                // Handle the case where no records are found for the given idSucursal
+                System.out.println("No records found for idSucursal: " + idSucursal);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception appropriately in your application
+        } finally {
+            ConexionBD.closeConnection(connection);
+        }
     }
 
     private void loadMesas() {
@@ -215,9 +246,8 @@ public class MesaReservacion extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanelTitulo = new javax.swing.JPanel();
-        jButtonRegresar = new javax.swing.JButton();
-        jLabelSucursal = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jButtonReservar = new javax.swing.JButton();
         jPanelAreaA = new javax.swing.JPanel();
         jLabelAreaA = new javax.swing.JLabel();
         jCheckBoxMesas1 = new javax.swing.JCheckBox();
@@ -234,44 +264,25 @@ public class MesaReservacion extends javax.swing.JFrame {
         jCheckBoxMesas5 = new javax.swing.JCheckBox();
         jCheckBoxMesas6 = new javax.swing.JCheckBox();
         jCheckBoxMesas7 = new javax.swing.JCheckBox();
-        jButtonReservar = new javax.swing.JButton();
+        jButtonRegresar = new javax.swing.JButton();
+        jLabelSucursal = new javax.swing.JLabel();
+        jLabelDireccion = new javax.swing.JLabel();
+        jLabelTelefono = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanelTitulo.setBackground(new java.awt.Color(51, 255, 255));
-        jPanelTitulo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 102)));
+        jPanel1.setBackground(new java.awt.Color(32, 17, 72));
 
-        jButtonRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/BotonRegresar.png"))); // NOI18N
-        jButtonRegresar.setPreferredSize(new java.awt.Dimension(30, 30));
-        jButtonRegresar.addActionListener(new java.awt.event.ActionListener() {
+        jButtonReservar.setBackground(new java.awt.Color(85, 231, 255));
+        jButtonReservar.setFont(new java.awt.Font("Barlow Condensed", 0, 60)); // NOI18N
+        jButtonReservar.setForeground(new java.awt.Color(32, 17, 72));
+        jButtonReservar.setText("RESERVAR");
+        jButtonReservar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonReservar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonRegresarActionPerformed(evt);
+                jButtonReservarActionPerformed(evt);
             }
         });
-
-        jLabelSucursal.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
-        jLabelSucursal.setText("Sucursal");
-
-        javax.swing.GroupLayout jPanelTituloLayout = new javax.swing.GroupLayout(jPanelTitulo);
-        jPanelTitulo.setLayout(jPanelTituloLayout);
-        jPanelTituloLayout.setHorizontalGroup(
-            jPanelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelTituloLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButtonRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabelSucursal)
-                .addContainerGap(876, Short.MAX_VALUE))
-        );
-        jPanelTituloLayout.setVerticalGroup(
-            jPanelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelTituloLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabelSucursal)
-                    .addComponent(jButtonRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(7, Short.MAX_VALUE))
-        );
 
         jPanelAreaA.setBackground(new java.awt.Color(102, 0, 102));
         jPanelAreaA.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 51, 255)));
@@ -317,7 +328,7 @@ public class MesaReservacion extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jCheckBoxMesas3))
                     .addGroup(jPanelAreaALayout.createSequentialGroup()
-                        .addGap(40, 40, 40)
+                        .addGap(42, 42, 42)
                         .addComponent(jLabelAreaA)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -397,10 +408,11 @@ public class MesaReservacion extends javax.swing.JFrame {
             .addGroup(jPanelAreaBLayout.createSequentialGroup()
                 .addGroup(jPanelAreaBLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelAreaBLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanelAreaBLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBoxMesas5)
-                            .addComponent(jCheckBoxMesas4, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addGroup(jPanelAreaBLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jCheckBoxMesas5))
+                            .addComponent(jCheckBoxMesas4))
                         .addGap(18, 18, 18)
                         .addGroup(jPanelAreaBLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jCheckBoxMesas7)
@@ -427,53 +439,88 @@ public class MesaReservacion extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButtonReservar.setFont(new java.awt.Font("Century Gothic", 0, 36)); // NOI18N
-        jButtonReservar.setText("RESERVAR");
-        jButtonReservar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonReservar.addActionListener(new java.awt.event.ActionListener() {
+        jButtonRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/BotonRegresar.png"))); // NOI18N
+        jButtonRegresar.setPreferredSize(new java.awt.Dimension(30, 30));
+        jButtonRegresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonReservarActionPerformed(evt);
+                jButtonRegresarActionPerformed(evt);
             }
         });
+
+        jLabelSucursal.setFont(new java.awt.Font("Bahiana", 0, 62)); // NOI18N
+        jLabelSucursal.setForeground(new java.awt.Color(85, 231, 255));
+        jLabelSucursal.setText("Sucursal");
+
+        jLabelDireccion.setFont(new java.awt.Font("Bahiana", 0, 48)); // NOI18N
+        jLabelDireccion.setForeground(new java.awt.Color(85, 231, 255));
+        jLabelDireccion.setText("Direccion");
+
+        jLabelTelefono.setFont(new java.awt.Font("Bahiana", 0, 48)); // NOI18N
+        jLabelTelefono.setForeground(new java.awt.Color(85, 231, 255));
+        jLabelTelefono.setText("Telefono");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelDireccion)
+                            .addComponent(jLabelTelefono)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButtonRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(138, 138, 138)
+                                .addComponent(jLabelSucursal))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(jButtonReservar, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(163, 163, 163)
+                .addComponent(jPanelAreaA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanelAreaB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanelAreaC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jButtonRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabelSucursal))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabelDireccion)
+                        .addGap(57, 57, 57)
+                        .addComponent(jLabelTelefono)
+                        .addGap(245, 245, 245)
+                        .addComponent(jButtonReservar, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanelAreaA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jPanelAreaC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jPanelAreaB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanelAreaA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanelAreaC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanelAreaB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(27, 27, 27)
-                        .addComponent(jButtonReservar, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelAreaA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanelAreaC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanelAreaB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(28, 28, 28)
-                                .addComponent(jButtonReservar, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -498,24 +545,61 @@ public class MesaReservacion extends javax.swing.JFrame {
 
     private void jButtonReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReservarActionPerformed
         // TODO add your handling code here:
-        if (selectedIdMesa != 1) {
-            // Check the estado of the selected mesa
-            int estadoMesa = getEstadoMesa(selectedIdMesa);
+        // Create a list to store the selected tables
+        List<Integer> selectedTables = new ArrayList<>();
 
-            // Check if the mesa is occupied
-            if (estadoMesa != 1) {
-                // Show an error message
-                JOptionPane.showMessageDialog(this, "Mesa " + selectedIdMesa + " está ocupada, por favor selecciona una mesa disponible.",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                // Perform reservation logic here if the mesa is available
-                System.out.println("Reserving mesa " + selectedIdMesa);
-                Reservacion ventanaR = new Reservacion ();
+        // Check each checkbox and add the selected tables to the list
+        if (jCheckBoxMesas1.isSelected()) {
+            selectedTables.add(1);
+        }
+        if (jCheckBoxMesas2.isSelected()) {
+            selectedTables.add(2);
+        }
+        if (jCheckBoxMesas3.isSelected()) {
+            selectedTables.add(3);
+        }
+        if (jCheckBoxMesas4.isSelected()) {
+            selectedTables.add(4);
+        }
+        if (jCheckBoxMesas5.isSelected()) {
+            selectedTables.add(5);
+        }
+        if (jCheckBoxMesas6.isSelected()) {
+            selectedTables.add(6);
+        }
+        if (jCheckBoxMesas7.isSelected()) {
+            selectedTables.add(7);
+        }
+        if (jCheckBoxMesas8.isSelected()) {
+            selectedTables.add(8);
+        }
+        if (jCheckBoxMesas9.isSelected()) {
+            selectedTables.add(9);
+        }
+        if (jCheckBoxMesas10.isSelected()) {
+            selectedTables.add(10);
+        }
+
+        // Check if any table is selected
+        if (!selectedTables.isEmpty()) {
+            // Check the estado of each selected table
+            boolean allTablesAvailable = selectedTables.stream()
+                    .allMatch(tableId -> getEstadoMesa(tableId) == 1);
+
+            if (allTablesAvailable) {
+                // Perform reservation logic here for all selected tables
+                System.out.println("Reserving mesas: " + selectedTables);
+                Reservacion ventanaR = new Reservacion();
+                ventanaR.setMesas(selectedTables); // Pass the selected tables to the Reservacion frame
                 ventanaR.setVisible(true);
+            } else {
+                // Show an error message if any selected table is occupied
+                JOptionPane.showMessageDialog(this, "Alguna mesa seleccionada está ocupada, por favor selecciona mesas disponibles.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            // No mesa selected, show an error message
-            JOptionPane.showMessageDialog(this, "Por favor selecciona una mesa.", "Error", JOptionPane.ERROR_MESSAGE);
+            // No table selected, show an error message
+            JOptionPane.showMessageDialog(this, "Por favor selecciona al menos una mesa.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButtonReservarActionPerformed
 
@@ -570,10 +654,12 @@ public class MesaReservacion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelAreaA;
     private javax.swing.JLabel jLabelAreaB;
     private javax.swing.JLabel jLabelAreaC;
+    private javax.swing.JLabel jLabelDireccion;
     private javax.swing.JLabel jLabelSucursal;
+    private javax.swing.JLabel jLabelTelefono;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelAreaA;
     private javax.swing.JPanel jPanelAreaB;
     private javax.swing.JPanel jPanelAreaC;
-    private javax.swing.JPanel jPanelTitulo;
     // End of variables declaration//GEN-END:variables
 }
