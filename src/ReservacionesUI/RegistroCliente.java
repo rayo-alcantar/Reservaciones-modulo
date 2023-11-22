@@ -9,6 +9,7 @@ import conexion.ConexionBD;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
@@ -30,21 +31,23 @@ public class RegistroCliente extends javax.swing.JFrame {
      */
     
     private void ResgistrarUsuario(){
-        
+        try{
         String nombre = new String(txtNombre.getText());
         String Apellidos = new String(txtApellidos.getText());
         String telefono = new String(txtTelefono.getText());
         String Correo = new String(txtCorreo.getText());
         Connection connection = ConexionBD.getConnection();
-        String sql = "INSERT INTO cliente (nombre, apellidos, telefono, correo) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO cliente (nombre, apellidos, telefono, correo) VALUES (?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(sql);
             
             statement.setString(1, nombre);
             statement.setString(2, Apellidos);
             statement.setString(3, telefono);
             statement.setString(4, Correo);
-            ResultSet rs = statement.executeQuery();
-        
+            ResultSet rs = statement.executeQuery(sql);
+        }catch(SQLException e){
+             System.out.println(e);
+        }
     }
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -65,14 +68,18 @@ public class RegistroCliente extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 0, 255));
+        jPanel1.setBackground(new java.awt.Color(102, 102, 255));
 
+        jLabel1.setFont(new java.awt.Font("Tempus Sans ITC", 0, 11)); // NOI18N
         jLabel1.setText("INGRESE SU NOMBRE:");
 
+        jLabel3.setFont(new java.awt.Font("Tempus Sans ITC", 0, 11)); // NOI18N
         jLabel3.setText("INGRESE SUS APELLIDOS");
 
+        jLabel4.setFont(new java.awt.Font("Tempus Sans ITC", 0, 11)); // NOI18N
         jLabel4.setText("INGRESE SU CORREO ELECTRONICO: ");
 
+        jLabel5.setFont(new java.awt.Font("Tempus Sans ITC", 0, 11)); // NOI18N
         jLabel5.setText("INGRESE EL NUMERO DE TELEFONICO:");
 
         lblRegresarReservacionBotonImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/BotonRegresar.png"))); // NOI18N
