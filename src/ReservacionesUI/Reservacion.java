@@ -9,16 +9,22 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * Poner el numero de sucursal donde se hizo la reservacion
+ * Hacer mas sencillo el registro de los clientes
+ * Corregir Shushi por Sushi en el logo
+ * Ponernos deacuerdo con los colores para las demas interfaces de los otros equipos
+ * Hacer un diseño del restaurante( poner donde estan los baños, la cocina, la entrada) en el mapa de las mesas
+ * 
  * @author Pedro Quiroz
  */
 public class Reservacion extends javax.swing.JFrame {
 
     private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    private DateFormat horaFormat = new SimpleDateFormat("HH:mm:ss");
+    private DateFormat horaFormat = new SimpleDateFormat("HH:mm");
     private final int idMesa;
     private List<Integer> selectedTables;
 
@@ -28,15 +34,16 @@ public class Reservacion extends javax.swing.JFrame {
     public Reservacion(int idMesa) {
         this.idMesa = idMesa;
         initComponents();
+        
     }
 
     Reservacion() {
         this.idMesa = 0; // Provide a default value or update as needed
         initComponents();
-        iniciarFechaYHora();
+       setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
     
-    private void iniciarFechaYHora(){
+    private void MensajeReservacion(){
         
         Date date = new Date();
         String fecha = dateFormat.format(date);
@@ -45,8 +52,7 @@ public class Reservacion extends javax.swing.JFrame {
         Date horario = new Date();
         String hora = horaFormat.format(horario);
         
-        
-        
+        JOptionPane.showMessageDialog(this, "Reservación realizada con éxito. \nFecha Reservada: "+fecha+" Hora Reservada: "+hora+" \nTiene 20 minutos antes de que su reservación expire", "Éxito", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void setMesas(List<Integer> selectedTables) {
@@ -69,7 +75,7 @@ public class Reservacion extends javax.swing.JFrame {
             }
 
             // Display a message or perform any additional logic as needed
-            JOptionPane.showMessageDialog(this, "Reservación realizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            MensajeReservacion();
             // Optionally, you might want to close the current frame after reservation
             this.dispose();
 
@@ -84,7 +90,7 @@ public class Reservacion extends javax.swing.JFrame {
          int idc=0;
          try {
              /*TELEFONO: 449283748392*/
-             
+            
             String nombre = new String(txtNombre.getText());
             String Apellidos = new String(txtApellidos.getText());
             String telefono = new String(txtTelefono.getText());
@@ -252,7 +258,7 @@ public class Reservacion extends javax.swing.JFrame {
 
     private void lblRegresarReservacionBotonImagenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegresarReservacionBotonImagenMouseClicked
         // TODO add your handling code here:
-        dispose();
+        this.setVisible(false);
     }//GEN-LAST:event_lblRegresarReservacionBotonImagenMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

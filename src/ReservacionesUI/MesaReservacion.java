@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -32,6 +33,7 @@ public class MesaReservacion extends javax.swing.JFrame {
         initComponents();
         loadMesas();
         loadInformacionSucursal();
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
 
     private MesaReservacion() {
@@ -274,7 +276,7 @@ public class MesaReservacion extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(32, 17, 72));
 
         jButtonReservar.setBackground(new java.awt.Color(85, 231, 255));
-        jButtonReservar.setFont(new java.awt.Font("Barlow Condensed", 0, 36)); // NOI18N
+        jButtonReservar.setFont(new java.awt.Font("Barlow Condensed", 0, 32)); // NOI18N
         jButtonReservar.setForeground(new java.awt.Color(32, 17, 72));
         jButtonReservar.setText("RESERVAR");
         jButtonReservar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -447,15 +449,15 @@ public class MesaReservacion extends javax.swing.JFrame {
             }
         });
 
-        jLabelSucursal.setFont(new java.awt.Font("Bahiana", 0, 62)); // NOI18N
+        jLabelSucursal.setFont(new java.awt.Font("Bahiana", 0, 55)); // NOI18N
         jLabelSucursal.setForeground(new java.awt.Color(85, 231, 255));
         jLabelSucursal.setText("Sucursal");
 
-        jLabelDireccion.setFont(new java.awt.Font("Bahiana", 0, 48)); // NOI18N
+        jLabelDireccion.setFont(new java.awt.Font("Bahiana", 0, 24)); // NOI18N
         jLabelDireccion.setForeground(new java.awt.Color(85, 231, 255));
         jLabelDireccion.setText("Direccion");
 
-        jLabelTelefono.setFont(new java.awt.Font("Bahiana", 0, 48)); // NOI18N
+        jLabelTelefono.setFont(new java.awt.Font("Bahiana", 0, 24)); // NOI18N
         jLabelTelefono.setForeground(new java.awt.Color(85, 231, 255));
         jLabelTelefono.setText("Telefono");
 
@@ -477,7 +479,7 @@ public class MesaReservacion extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(36, 36, 36)
                         .addComponent(jButtonReservar, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(178, 178, 178)
+                .addGap(79, 79, 79)
                 .addComponent(jPanelAreaA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -509,7 +511,7 @@ public class MesaReservacion extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addComponent(jPanelAreaA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -596,7 +598,7 @@ public class MesaReservacion extends javax.swing.JFrame {
                 Reservacion ventanaR = new Reservacion();
                 ventanaR.setMesas(selectedTables); // Pass the selected tables to the Reservacion frame
                 ventanaR.setVisible(true);
-                }else{
+                }else if(respuesta == JOptionPane.NO_OPTION){
                     RegistroCliente VentanaRC = new RegistroCliente();
                     VentanaRC.setVisible(allTablesAvailable);
                 }
