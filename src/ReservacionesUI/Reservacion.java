@@ -108,7 +108,20 @@ public class Reservacion extends javax.swing.JFrame {
             if (rs.next()) {
                 idc = rs.getInt("idCliente");
                 
-                realizarReservacion();
+            realizarReservacion();
+            
+            String sql2 = "INSERT INTO reservacion (idCliente, fecha, hora, idMesa) VALUES (?,?,?,?) ";
+            PreparedStatement statement2 = connection.prepareStatement(sql2);
+            Date date = new Date();
+            String fecha = dateFormat.format(date);
+            Date horario = new Date();
+            String hora = horaFormat.format(horario);
+            
+            statement.setString(1, fecha);
+            statement.setString(2, hora);
+            ResultSet rs2 = statement.executeQuery();
+            
+            
             }else{
                 JOptionPane.showMessageDialog(this, "No se encontro el cliente, verifique los datos", "Error", JOptionPane.ERROR_MESSAGE);
 
