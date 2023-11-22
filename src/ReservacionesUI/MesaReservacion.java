@@ -597,7 +597,8 @@ public class MesaReservacion extends javax.swing.JFrame {
                 ventanaR.setMesas(selectedTables); // Pass the selected tables to the Reservacion frame
                 ventanaR.setVisible(true);
                 }else{
-                    
+                    RegistroCliente VentanaRC = new RegistroCliente();
+                    VentanaRC.setVisible(allTablesAvailable);
                 }
                 
             } else {
