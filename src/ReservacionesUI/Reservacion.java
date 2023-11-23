@@ -13,12 +13,12 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- * Poner el numero de sucursal donde se hizo la reservacion
- * Hacer mas sencillo el registro de los clientes
- * Corregir Shushi por Sushi en el logo
- * Ponernos deacuerdo con los colores para las demas interfaces de los otros equipos
- * Hacer un diseño del restaurante( poner donde estan los baños, la cocina, la entrada) en el mapa de las mesas
- * 
+ * Poner el numero de sucursal donde se hizo la reservacion Hacer mas sencillo
+ * el registro de los clientes Corregir Shushi por Sushi en el logo Ponernos
+ * deacuerdo con los colores para las demas interfaces de los otros equipos
+ * Hacer un diseño del restaurante( poner donde estan los baños, la cocina, la
+ * entrada) en el mapa de las mesas
+ *
  * @author Pedro Quiroz
  */
 public class Reservacion extends javax.swing.JFrame {
@@ -34,32 +34,31 @@ public class Reservacion extends javax.swing.JFrame {
     public Reservacion(int idMesa) {
         this.idMesa = idMesa;
         initComponents();
-        
+
     }
 
     Reservacion() {
         this.idMesa = 0; // Provide a default value or update as needed
         initComponents();
-       setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
-    
-    private void MensajeReservacion(){
-        
+
+    private void MensajeReservacion() {
+
         Date date = new Date();
         String fecha = dateFormat.format(date);
-        
-        
+
         Date horario = new Date();
         String hora = horaFormat.format(horario);
-        
-        JOptionPane.showMessageDialog(this, "Reservación realizada con éxito. \nFecha Reservada: "+fecha+" Hora Reservada: "+hora+" \nTiene 20 minutos antes de que su reservación expire", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+        JOptionPane.showMessageDialog(this, "Reservación realizada con éxito. \nFecha Reservada: " + fecha + " Hora Reservada: " + hora + " \nTiene 20 minutos antes de que su reservación expire", "Éxito", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void setMesas(List<Integer> selectedTables) {
         this.selectedTables = selectedTables;
     }
-    
-     private void realizarReservacion() {
+
+    private void realizarReservacion() {
         try {
             Connection connection = ConexionBD.getConnection();
 
@@ -86,11 +85,11 @@ public class Reservacion extends javax.swing.JFrame {
         }
     }
 
-     public int consultarIDC(){
-         int idc=0;
-         try {
-             /*TELEFONO: 449283748392*/
-            
+    public int consultarIDC() {
+        int idc = 0;
+        try {
+            /*TELEFONO: 449283748392*/
+
             String nombre = new String(txtNombre.getText());
             String Apellidos = new String(txtApellidos.getText());
             String telefono = new String(txtTelefono.getText());
@@ -98,47 +97,41 @@ public class Reservacion extends javax.swing.JFrame {
             Connection connection = ConexionBD.getConnection();
             String sql = "SELECT idCliente FROM cliente WHERE nombre = ? AND apellidos = ? AND  telefono = ? AND correo = ? ";
             PreparedStatement statement = connection.prepareStatement(sql);
-            
+
             statement.setString(1, nombre);
             statement.setString(2, Apellidos);
             statement.setString(3, telefono);
             statement.setString(4, Correo);
             ResultSet rs = statement.executeQuery();
-            
+
             if (rs.next()) {
                 idc = rs.getInt("idCliente");
-                
-            realizarReservacion();
-            
-            String sql2 = "INSERT INTO reservacion (idCliente, fecha, hora, idMesa) VALUES (?,?,?,?) ";
-            PreparedStatement statement2 = connection.prepareStatement(sql2);
-            Date date = new Date();
-            String fecha = dateFormat.format(date);
-            Date horario = new Date();
-            String hora = horaFormat.format(horario);
-            
-            statement.setString(1, fecha);
-            statement.setString(2, hora);
-            ResultSet rs2 = statement.executeQuery();
-            
-            
-            }else{
+
+                realizarReservacion();
+
+                String sql2 = "INSERT INTO reservacion (idCliente, fecha, hora, idMesa) VALUES (?,?,?,?) ";
+                PreparedStatement statement2 = connection.prepareStatement(sql2);
+                Date date = new Date();
+                String fecha = dateFormat.format(date);
+                Date horario = new Date();
+                String hora = horaFormat.format(horario);
+
+                statement.setString(1, fecha);
+                statement.setString(2, hora);
+                ResultSet rs2 = statement.executeQuery();
+
+            } else {
                 JOptionPane.showMessageDialog(this, "No se encontro el cliente, verifique los datos", "Error", JOptionPane.ERROR_MESSAGE);
 
             }
-            
-            
-            
-
         } catch (SQLException e) {
-             System.out.println(e);
+            System.out.println(e);
         }
-         
-         
-         return idc;
-     }
-     
+
+        return idc;
+    }
     
+    public 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -275,8 +268,7 @@ public class Reservacion extends javax.swing.JFrame {
     }//GEN-LAST:event_lblRegresarReservacionBotonImagenMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
-        
+
         consultarIDC();
     }//GEN-LAST:event_jButton1ActionPerformed
 
