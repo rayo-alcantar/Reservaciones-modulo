@@ -128,7 +128,7 @@ public class Sucursal extends javax.swing.JFrame {
         lblRestaurantes.setForeground(new java.awt.Color(85, 231, 255));
         lblRestaurantes.setText("Sucursales");
 
-        jLabelImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/NeoTokyoLogo.png"))); // NOI18N
+        jLabelImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/Logo Neo Tokio.png"))); // NOI18N
         jLabelImagen.setPreferredSize(new java.awt.Dimension(500, 500));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
