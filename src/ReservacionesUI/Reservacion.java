@@ -1,5 +1,11 @@
 package ReservacionesUI;
 
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import conexion.ConexionBD;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,18 +13,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- * Poner el numero de sucursal donde se hizo la reservacion
- * Hacer mas sencillo el registro de los clientes
- * Corregir Shushi por Sushi en el logo
- * Ponernos deacuerdo con los colores para las demas interfaces de los otros equipos
- * Hacer un diseño del restaurante( poner donde estan los baños, la cocina, la entrada) en el mapa de las mesas
- * 
  * @author Pedro Quiroz
  */
 public class Reservacion extends javax.swing.JFrame {
@@ -26,7 +27,7 @@ public class Reservacion extends javax.swing.JFrame {
     private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private DateFormat horaFormat = new SimpleDateFormat("HH:mm");
     private final int idMesa;
-    private List<Integer> selectedTables;
+    private List<Integer> selectedMesas = new ArrayList<>();
 
     /**
      * Creates new form Reservacion
@@ -34,111 +35,173 @@ public class Reservacion extends javax.swing.JFrame {
     public Reservacion(int idMesa) {
         this.idMesa = idMesa;
         initComponents();
-        
     }
 
     Reservacion() {
         this.idMesa = 0; // Provide a default value or update as needed
         initComponents();
-       setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
-    
-    private void MensajeReservacion(){
-        
+
+    public void setMesas(List<Integer> selectedMesas) {
+        this.selectedMesas = selectedMesas;
+    }
+
+    public void setSelectedIdMesas(List<Integer> selectedMesas) {
+        this.selectedMesas = selectedMesas;
+    }
+
+    void updateDatabase(List<Integer> selectedMesas) {
+        Connection connection = ConexionBD.getConnection();
+        String updateQuery = "UPDATE mesa SET estado = ? WHERE idMesa = ?";
+
+        try ( PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
+            for (int mesaId : selectedMesas) {
+                updateStatement.setInt(1, 2);  // Assuming 2 represents the reserved state
+                updateStatement.setInt(2, mesaId);
+                updateStatement.addBatch();
+            }
+
+            updateStatement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();  // Handle the exception appropriately
+        } finally {
+            ConexionBD.closeConnection(connection);
+        }
+    }
+
+    private void MensajeReservacion() {
+
         Date date = new Date();
         String fecha = dateFormat.format(date);
-        
-        
+
         Date horario = new Date();
         String hora = horaFormat.format(horario);
-        
-        JOptionPane.showMessageDialog(this, "Reservación realizada con éxito. \nFecha Reservada: "+fecha+" Hora Reservada: "+hora+" \nTiene 20 minutos antes de que su reservación expire", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+        JOptionPane.showMessageDialog(this, "Reservación realizada con éxito. \nFecha Reservada: " + fecha + " Hora Reservada: " + hora + " \nTiene 20 minutos antes de que su reservación expire", "Éxito", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void setMesas(List<Integer> selectedTables) {
-        this.selectedTables = selectedTables;
+    private void realizarReservacion() {
+        try {
+            String nombre = txtNombre.getText();
+            String apellidos = txtApellidos.getText();
+            String correo = txtCorreo.getText();
+            String telefono = txtTelefono.getText();
+
+            // Step 1: Look for idCliente
+            int idCliente = buscarIdCliente(nombre, apellidos, correo, telefono);
+
+            if (idCliente != -1) {
+                // Step 2: Get the selected tables
+                if (!selectedMesas.isEmpty()) {
+                    // Assuming you want to get the first mesa ID from the list
+                    int mesaId = selectedMesas.get(0);
+
+                    // Step 3: Insert reservation and update mesa for each selected table
+                    Date date = new Date();
+                    String fecha = dateFormat.format(date);
+
+                    Date horario = new Date();
+                    String hora = horaFormat.format(horario);
+
+                    insertarReservacion(idCliente, fecha, hora, selectedMesas);
+
+                    MensajeReservacion(); // Show success message
+                } else {
+                    JOptionPane.showMessageDialog(this, "Por favor selecciona al menos una mesa.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Cliente no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
     }
-    
-     private void realizarReservacion() {
+
+    private int buscarIdCliente(String nombre, String apellidos, String correo, String telefono) {
         try {
             Connection connection = ConexionBD.getConnection();
+            String sql = "SELECT idCliente FROM cliente WHERE nombre = ? AND apellidos = ? AND correo = ? AND telefono = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
 
-            // Iterate through selected tables and perform reservation logic
-            for (Integer mesa : selectedTables) {
-                // You should add your logic here to update the estado of the mesa in the database
-                // For demonstration purposes, let's assume a simple update query
-                String updateSql = "UPDATE mesa SET estado = ? WHERE idMesa = ?";
-                PreparedStatement updateStatement = connection.prepareStatement(updateSql);
-                updateStatement.setInt(1, 2); // Assuming 2 represents the reserved state
-                updateStatement.setInt(2, mesa);
-                updateStatement.executeUpdate();
+            statement.setString(1, nombre);
+            statement.setString(2, apellidos);
+            statement.setString(3, correo);
+            statement.setString(4, telefono);
+
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("idCliente");
             }
-
-            // Display a message or perform any additional logic as needed
-            MensajeReservacion();
-            // Optionally, you might want to close the current frame after reservation
-            this.dispose();
-
         } catch (SQLException e) {
-            // Handle database-related exceptions
-            e.printStackTrace(); // You might want to handle exceptions more gracefully in a real application
-            JOptionPane.showMessageDialog(this, "Error en la reserva, por favor inténtalo de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println(e);
         }
+
+        return -1; // Return -1 if not found
     }
 
-     public int consultarIDC(){
-         int idc=0;
-         try {
-             /*TELEFONO: 449283748392*/
-            
-            String nombre = new String(txtNombre.getText());
-            String Apellidos = new String(txtApellidos.getText());
-            String telefono = new String(txtTelefono.getText());
-            String Correo = new String(txtCorreo.getText());
-            Connection connection = ConexionBD.getConnection();
-            String sql = "SELECT idCliente FROM cliente WHERE nombre = ? AND apellidos = ? AND  telefono = ? AND correo = ? ";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            
-            statement.setString(1, nombre);
-            statement.setString(2, Apellidos);
-            statement.setString(3, telefono);
-            statement.setString(4, Correo);
-            ResultSet rs = statement.executeQuery();
-            
-            if (rs.next()) {
-                idc = rs.getInt("idCliente");
-                
-            realizarReservacion();
-            
-            String sql2 = "INSERT INTO reservacion (idCliente, fecha, hora, idMesa) VALUES (?,?,?,?) ";
-            PreparedStatement statement2 = connection.prepareStatement(sql2);
-            Date date = new Date();
-            String fecha = dateFormat.format(date);
-            Date horario = new Date();
-            String hora = horaFormat.format(horario);
-            
-            statement.setString(1, fecha);
-            statement.setString(2, hora);
-            ResultSet rs2 = statement.executeQuery();
-            
-            
-            }else{
-                JOptionPane.showMessageDialog(this, "No se encontro el cliente, verifique los datos", "Error", JOptionPane.ERROR_MESSAGE);
+    private void insertarReservacion(int idCliente, String fecha, String hora, List<Integer> selectedMesas) {
+        Connection connection = null;
+        try {
+            connection = ConexionBD.getConnection();
+            connection.setAutoCommit(false); // Disable auto-commit
 
+            // Step 1: Insert reservation for each selected table
+            String sqlReservacion = "INSERT INTO reservacion (FolioReserva, idCliente, fecha, hora, idMesa) VALUES (NULL, ?, STR_TO_DATE(?, '%d/%m/%Y'), ?, ?)";
+            try ( PreparedStatement statementReservacion = connection.prepareStatement(sqlReservacion, Statement.RETURN_GENERATED_KEYS)) {
+                for (int mesaId : selectedMesas) {
+                    statementReservacion.setInt(1, idCliente);
+                    statementReservacion.setString(2, fecha);
+                    statementReservacion.setString(3, hora);
+                    statementReservacion.setInt(4, mesaId);  // Use mesaId instead of idMesa
+
+                    statementReservacion.executeUpdate();
+
+                    // Retrieve the generated FolioReserva
+                    ResultSet generatedKeys = statementReservacion.getGeneratedKeys();
+                    int folioReserva = -1;
+                    if (generatedKeys.next()) {
+                        folioReserva = generatedKeys.getInt(1);
+                    }
+
+                    // Step 2: Update mesa for each selected table
+                    String sqlUpdateMesa = "UPDATE mesa SET estado = ? WHERE idMesa = ?";
+                    try ( PreparedStatement statementUpdateMesa = connection.prepareStatement(sqlUpdateMesa)) {
+                        statementUpdateMesa.setInt(1, 2); // Set estado to 2 (occupied)
+                        statementUpdateMesa.setInt(2, mesaId);  // Use mesaId instead of idMesa
+                        statementUpdateMesa.executeUpdate();
+                    }
+
+                    // Use folioReserva or perform any additional logic for each reservation
+                    System.out.println("Reservation successful. FolioReserva: " + folioReserva);
+                }
+
+                // Commit the transaction
+                connection.commit();
             }
-            
-            
-            
-
         } catch (SQLException e) {
-             System.out.println(e);
+            // Rollback the transaction in case of an exception
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            System.out.println(e);
+        } finally {
+            // Close the connection
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true); // Enable auto-commit before closing
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-         
-         
-         return idc;
-     }
-     
-    
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -149,136 +212,169 @@ public class Reservacion extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabelApellidosReservacion = new javax.swing.JLabel();
-        txtApellidos = new javax.swing.JTextField();
-        jLabelCorreoReservacion = new javax.swing.JLabel();
+        jPanelReservacionMesas = new javax.swing.JPanel();
         txtCorreo = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        lblRegresarReservacionBotonImagen = new javax.swing.JLabel();
+        jButtonRegresar = new javax.swing.JButton();
+        jButtonRerservacion = new javax.swing.JButton();
         lblTituloReservacion = new javax.swing.JLabel();
-        jLabelCorreoReservacion1 = new javax.swing.JLabel();
+        jLabelTelefonoReservacion = new javax.swing.JLabel();
         txtTelefono = new javax.swing.JTextField();
         jLabelReservacionNombre = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
+        jLabelApellidosReservacion = new javax.swing.JLabel();
+        txtApellidos = new javax.swing.JTextField();
+        jLabelCorreoReservacion = new javax.swing.JLabel();
+        jLabelIcono = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(32, 17, 72));
 
-        jLabelApellidosReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-        jLabelApellidosReservacion.setText("Apellidos:");
+        jPanelReservacionMesas.setBackground(new java.awt.Color(32, 17, 72));
+        jPanelReservacionMesas.setForeground(new java.awt.Color(32, 17, 72));
 
-        txtApellidos.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtCorreo.setFont(new java.awt.Font("Barlow Light", 1, 24)); // NOI18N
+        txtCorreo.setForeground(new java.awt.Color(0, 204, 253));
 
-        jLabelCorreoReservacion.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-        jLabelCorreoReservacion.setText("Correo:");
-
-        txtCorreo.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-
-        jButton1.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
-        jButton1.setText("RESERVAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonRegresar.setFont(new java.awt.Font("Barlow Light", 1, 24)); // NOI18N
+        jButtonRegresar.setForeground(new java.awt.Color(0, 204, 253));
+        jButtonRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/BotonRegresar.png"))); // NOI18N
+        jButtonRegresar.setPreferredSize(new java.awt.Dimension(30, 30));
+        jButtonRegresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonRegresarActionPerformed(evt);
             }
         });
 
-        lblRegresarReservacionBotonImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/BotonRegresar.png"))); // NOI18N
-        lblRegresarReservacionBotonImagen.setText("Regresar");
-        lblRegresarReservacionBotonImagen.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblRegresarReservacionBotonImagenMouseClicked(evt);
+        jButtonRerservacion.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
+        jButtonRerservacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/BotonReservar.png"))); // NOI18N
+        jButtonRerservacion.setBorder(null);
+        jButtonRerservacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRerservacionActionPerformed(evt);
             }
         });
 
-        lblTituloReservacion.setFont(new java.awt.Font("Century Gothic", 0, 36)); // NOI18N
+        lblTituloReservacion.setFont(new java.awt.Font("Barlow Light", 1, 24)); // NOI18N
+        lblTituloReservacion.setForeground(new java.awt.Color(0, 204, 253));
         lblTituloReservacion.setText("Reservación de Mesa(s)");
 
-        jLabelCorreoReservacion1.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-        jLabelCorreoReservacion1.setText("Telefono:");
+        jLabelTelefonoReservacion.setFont(new java.awt.Font("Barlow Light", 1, 24)); // NOI18N
+        jLabelTelefonoReservacion.setForeground(new java.awt.Color(0, 204, 253));
+        jLabelTelefonoReservacion.setText("Telefono:");
 
-        txtTelefono.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtTelefono.setFont(new java.awt.Font("Barlow Light", 1, 24)); // NOI18N
+        txtTelefono.setForeground(new java.awt.Color(0, 204, 253));
 
-        jLabelReservacionNombre.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        jLabelReservacionNombre.setFont(new java.awt.Font("Barlow Light", 1, 24)); // NOI18N
+        jLabelReservacionNombre.setForeground(new java.awt.Color(0, 204, 253));
         jLabelReservacionNombre.setText("Nombre:");
 
-        txtNombre.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        txtNombre.setFont(new java.awt.Font("Barlow Light", 1, 24)); // NOI18N
+        txtNombre.setForeground(new java.awt.Color(0, 204, 253));
         txtNombre.setName("txtNombre"); // NOI18N
+
+        jLabelApellidosReservacion.setFont(new java.awt.Font("Barlow Light", 1, 24)); // NOI18N
+        jLabelApellidosReservacion.setForeground(new java.awt.Color(0, 204, 253));
+        jLabelApellidosReservacion.setText("Apellidos:");
+
+        txtApellidos.setFont(new java.awt.Font("Barlow Light", 1, 24)); // NOI18N
+        txtApellidos.setForeground(new java.awt.Color(0, 204, 253));
+
+        jLabelCorreoReservacion.setFont(new java.awt.Font("Barlow Light", 1, 24)); // NOI18N
+        jLabelCorreoReservacion.setForeground(new java.awt.Color(0, 204, 253));
+        jLabelCorreoReservacion.setText("Correo:");
+
+        jLabelIcono.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/Logo Neo Tokio.png"))); // NOI18N
+
+        javax.swing.GroupLayout jPanelReservacionMesasLayout = new javax.swing.GroupLayout(jPanelReservacionMesas);
+        jPanelReservacionMesas.setLayout(jPanelReservacionMesasLayout);
+        jPanelReservacionMesasLayout.setHorizontalGroup(
+            jPanelReservacionMesasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelReservacionMesasLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelReservacionMesasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelReservacionMesasLayout.createSequentialGroup()
+                        .addComponent(jLabelIcono, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+                        .addGroup(jPanelReservacionMesasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelReservacionMesasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(jPanelReservacionMesasLayout.createSequentialGroup()
+                                    .addComponent(jLabelReservacionNombre)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelReservacionMesasLayout.createSequentialGroup()
+                                    .addGroup(jPanelReservacionMesasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabelCorreoReservacion)
+                                        .addComponent(jLabelApellidosReservacion)
+                                        .addComponent(jLabelTelefonoReservacion))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(jPanelReservacionMesasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txtApellidos)
+                                        .addComponent(txtCorreo)
+                                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanelReservacionMesasLayout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addComponent(jButtonRerservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(44, 44, 44))
+                    .addGroup(jPanelReservacionMesasLayout.createSequentialGroup()
+                        .addComponent(jButtonRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(204, 204, 204)
+                        .addComponent(lblTituloReservacion)
+                        .addGap(59, 59, 59))))
+        );
+        jPanelReservacionMesasLayout.setVerticalGroup(
+            jPanelReservacionMesasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelReservacionMesasLayout.createSequentialGroup()
+                .addGroup(jPanelReservacionMesasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelReservacionMesasLayout.createSequentialGroup()
+                        .addComponent(lblTituloReservacion)
+                        .addGap(7, 7, 7))
+                    .addComponent(jButtonRegresar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelReservacionMesasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelIcono)
+                    .addGroup(jPanelReservacionMesasLayout.createSequentialGroup()
+                        .addGroup(jPanelReservacionMesasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelReservacionNombre)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelReservacionMesasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelApellidosReservacion))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanelReservacionMesasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelCorreoReservacion))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelReservacionMesasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelTelefonoReservacion))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonRerservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(41, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblRegresarReservacionBotonImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblTituloReservacion)
-                        .addGap(0, 26, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabelReservacionNombre)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabelCorreoReservacion)
-                                    .addComponent(jLabelApellidosReservacion)
-                                    .addComponent(jLabelCorreoReservacion1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtApellidos)
-                                    .addComponent(txtCorreo)
-                                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(164, 164, 164)
-                .addComponent(jButton1)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanelReservacionMesas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblRegresarReservacionBotonImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblTituloReservacion)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelReservacionNombre)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelApellidosReservacion))
-                .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelCorreoReservacion))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelCorreoReservacion1))
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addContainerGap(17, Short.MAX_VALUE))
+            .addComponent(jPanelReservacionMesas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lblRegresarReservacionBotonImagenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegresarReservacionBotonImagenMouseClicked
-        // TODO add your handling code here:
-        this.setVisible(false);
-    }//GEN-LAST:event_lblRegresarReservacionBotonImagenMouseClicked
+    private void jButtonRerservacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRerservacionActionPerformed
+        realizarReservacion();
+    }//GEN-LAST:event_jButtonRerservacionActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
-        
-        consultarIDC();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jButtonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegresarActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_jButtonRegresarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -316,12 +412,14 @@ public class Reservacion extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonRegresar;
+    private javax.swing.JButton jButtonRerservacion;
     private javax.swing.JLabel jLabelApellidosReservacion;
     private javax.swing.JLabel jLabelCorreoReservacion;
-    private javax.swing.JLabel jLabelCorreoReservacion1;
+    private javax.swing.JLabel jLabelIcono;
     private javax.swing.JLabel jLabelReservacionNombre;
-    private javax.swing.JLabel lblRegresarReservacionBotonImagen;
+    private javax.swing.JLabel jLabelTelefonoReservacion;
+    private javax.swing.JPanel jPanelReservacionMesas;
     private javax.swing.JLabel lblTituloReservacion;
     private javax.swing.JTextField txtApellidos;
     private javax.swing.JTextField txtCorreo;

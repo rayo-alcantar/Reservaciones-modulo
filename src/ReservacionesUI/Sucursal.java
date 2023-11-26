@@ -88,15 +88,39 @@ public class Sucursal extends javax.swing.JFrame {
     }
 
     private void openMesaReservacion(int idSucursal) {
-        int response = JOptionPane.showConfirmDialog
-        (this, "Acceder a Sucursal " + idSucursal + "?", "Confirmación", JOptionPane.YES_NO_OPTION);
+        if (hasAvailableTables(idSucursal)) {
+            int response = JOptionPane.showConfirmDialog(
+                    this, "Acceder a Sucursal " + idSucursal + "?", "Confirmación", JOptionPane.YES_NO_OPTION);
 
-        if (response == JOptionPane.YES_OPTION) {
-            MesaReservacion mesaReservacion = new MesaReservacion(idSucursal);
-            mesaReservacion.setVisible(true);
+            if (response == JOptionPane.YES_OPTION) {
+                MesaReservacion mesaReservacion = new MesaReservacion(idSucursal);
+                mesaReservacion.setVisible(true);
+            }
         } else {
-            
+            JOptionPane.showMessageDialog(this, "La sucursal seleccionada no tiene mesas disponibles en este momento.",
+                    "Mesas no disponibles", JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+
+    private boolean hasAvailableTables(int idSucursal) {
+        boolean hasAvailableTables = false;
+
+        try ( Connection connection = ConexionBD.getConnection()) {
+            String sql = "SELECT COUNT(*) FROM mesa WHERE idSucursal = ? AND estado = 1";
+            try ( PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setInt(1, idSucursal);
+                try ( ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        int count = resultSet.getInt(1);
+                        hasAvailableTables = count > 0;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return hasAvailableTables;
     }
 
     /**
