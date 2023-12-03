@@ -23,17 +23,21 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanelRegistroCliente" alignment="0" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jPanelReservacion" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanelRegistroCliente" alignment="0" max="32767" attributes="0"/>
+          <Component id="jPanelReservacion" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JPanel" name="jPanelRegistroCliente">
+    <Container class="javax.swing.JPanel" name="jPanelReservacion">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="48" green="11" red="20" type="rgb"/>
@@ -50,33 +54,38 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <Component id="jButtonRegresarRegistroCliente" min="-2" pref="75" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="166" max="-2" attributes="0"/>
-                  <Component id="jLabelReservacionMesasTitulo" min="-2" pref="293" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="jLabelTelefonoCliente" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelEmailCliente" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelApellidosCliente" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelNombreCliente" alignment="1" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="jButtonRegistrarCliente" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jTextFieldTelefonoCliente" alignment="0" min="-2" pref="296" max="-2" attributes="0"/>
-                          <Component id="jTextFieldEmailCliente" alignment="0" min="-2" pref="296" max="-2" attributes="0"/>
-                          <Component id="jTextFieldApellidosCliente" alignment="0" min="-2" pref="296" max="-2" attributes="0"/>
-                          <Component id="jTextFieldNombreCliente" alignment="0" min="-2" pref="296" max="-2" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="294" max="-2" attributes="0"/>
+                          <Component id="jButtonRegistrarReservacion" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="jLabelTelefonoReservacion" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelEmailReservacion" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelApellidosReservacion" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelNombreReservacion" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jTextFieldTelefonoReservacion" min="-2" pref="296" max="-2" attributes="0"/>
+                              <Component id="jTextFieldEmailReservacion" min="-2" pref="296" max="-2" attributes="0"/>
+                              <Component id="jTextFieldApellidosReservacion" min="-2" pref="296" max="-2" attributes="0"/>
+                              <Component id="jTextFieldNombreReservacion" min="-2" pref="296" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                          <Component id="jLabelLogoNeoTokio" min="-2" pref="301" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jButtonRegresarRegistroReservacion" min="-2" pref="75" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="154" max="-2" attributes="0"/>
+                          <Component id="jLabelReservacionMesasTitulo" min="-2" pref="368" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="213" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jLabelLogoNeoTokio" min="-2" pref="301" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="81" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -84,71 +93,77 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jButtonRegresarRegistroCliente" min="-2" max="-2" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabelReservacionMesasTitulo" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="jButtonRegresarRegistroReservacion" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="jLabelReservacionMesasTitulo" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jTextFieldNombreCliente" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
-                              <Component id="jLabelNombreCliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jTextFieldNombreReservacion" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
+                              <Component id="jLabelNombreReservacion" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jTextFieldApellidosCliente" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
-                              <Component id="jLabelApellidosCliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jTextFieldApellidosReservacion" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
+                              <Component id="jLabelApellidosReservacion" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jTextFieldEmailCliente" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
-                              <Component id="jLabelEmailCliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jTextFieldEmailReservacion" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
+                              <Component id="jLabelEmailReservacion" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jTextFieldTelefonoCliente" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
-                              <Component id="jLabelTelefonoCliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jTextFieldTelefonoReservacion" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
+                              <Component id="jLabelTelefonoReservacion" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabelLogoNeoTokio" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jButtonRegistrarCliente" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="19" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                  <Component id="jButtonRegistrarReservacion" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="66" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="jButtonRegresarRegistroCliente">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Recursos/BotonRegresar.png"/>
-            </Property>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
-                <EmptyBorder/>
-              </Border>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonRegresarRegistroClienteActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldTelefonoCliente">
+        <Component class="javax.swing.JTextField" name="jTextFieldNombreReservacion">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Barlow Condensed Medium" size="28" style="0"/>
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabelNombreCliente">
+        <Component class="javax.swing.JTextField" name="jTextFieldApellidosReservacion">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Barlow Condensed Medium" size="28" style="0"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="jTextFieldEmailReservacion">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Barlow Condensed Medium" size="28" style="0"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="jTextFieldTelefonoReservacion">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Barlow Condensed Medium" size="28" style="0"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelNombreReservacion">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="e7" red="55" type="rgb"/>
@@ -162,7 +177,7 @@
             <Property name="text" type="java.lang.String" value="Nombre :"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabelApellidosCliente">
+        <Component class="javax.swing.JLabel" name="jLabelApellidosReservacion">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="e7" red="55" type="rgb"/>
@@ -176,7 +191,7 @@
             <Property name="text" type="java.lang.String" value="Apellidos :"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabelEmailCliente">
+        <Component class="javax.swing.JLabel" name="jLabelEmailReservacion">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="e7" red="55" type="rgb"/>
@@ -190,7 +205,7 @@
             <Property name="text" type="java.lang.String" value="E-Mail :"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabelTelefonoCliente">
+        <Component class="javax.swing.JLabel" name="jLabelTelefonoReservacion">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="e7" red="55" type="rgb"/>
@@ -204,26 +219,20 @@
             <Property name="text" type="java.lang.String" value="Telefono :"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldNombreCliente">
+        <Component class="javax.swing.JButton" name="jButtonRegresarRegistroReservacion">
           <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Barlow Condensed Medium" size="28" style="0"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/Recursos/BotonRegresar.png"/>
+            </Property>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                <EmptyBorder/>
+              </Border>
             </Property>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldApellidosCliente">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Barlow Condensed Medium" size="28" style="0"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldEmailCliente">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Barlow Condensed Medium" size="28" style="0"/>
-            </Property>
-          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonRegresarRegistroReservacionActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelLogoNeoTokio">
           <Properties>
@@ -233,6 +242,17 @@
             <Property name="text" type="java.lang.String" value="jLabel1"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JButton" name="jButtonRegistrarReservacion">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Barlow Condensed Medium" size="36" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Registrar Reservacion"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonRegistrarReservacionActionPerformed"/>
+          </Events>
+        </Component>
         <Component class="javax.swing.JLabel" name="jLabelReservacionMesasTitulo">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -241,19 +261,8 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="fd" green="cc" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="registro de clientes"/>
+            <Property name="text" type="java.lang.String" value="Reservaci&#xf3;n de Mesas para"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButtonRegistrarCliente">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Barlow Condensed Medium" size="36" style="0"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Registrar Cliente"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonRegistrarClienteActionPerformed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>
