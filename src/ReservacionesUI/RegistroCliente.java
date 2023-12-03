@@ -1,29 +1,146 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ReservacionesUI;
 
+// import necesaria para la conexión a la base de datos
 import conexion.ConexionBD;
+
+// imports necesarios para interactuar con bases de datos mediante JDBC
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JFrame;
+
+// imports necesarios para trabajar con componentes gráficos específicos de Swing
+import javax.swing.JOptionPane;
 
 /**
  *
- * @author yair
+ * @author Pedro Quiroz
  */
 public class RegistroCliente extends javax.swing.JFrame {
 
     /**
-     * Creates new form RegistroCliente
+     * Constructor que inicializa la interfaz gráfica para el registro de
+     * clientes.
      */
     public RegistroCliente() {
         initComponents();
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    }
+
+    /**
+     * Método para agregar un nuevo cliente a la base de datos. Obtiene la
+     * conexión a la base de datos y valida los datos del cliente antes de
+     * realizar la inserción.
+     *
+     */
+    private void setNuevoCliente() {
+        // Obtener la conexión a la base de datos
+        Connection connection = ConexionBD.getConnection();
+
+        // Obtener valores de los campos de texto
+        String nombre = jTextFieldNombreCliente.getText().toUpperCase();
+        String apellidos = jTextFieldApellidosCliente.getText().toUpperCase();
+        String telefono = jTextFieldTelefonoCliente.getText();
+        String correo = jTextFieldEmailCliente.getText().toUpperCase();
+
+        // Validar nombre y apellidos (permitir solo letras)
+        if (!nombre.matches("[a-zA-Z]+") || !apellidos.matches("[a-zA-Z]+")) {
+            JOptionPane.showMessageDialog(this, "Solo se permiten letras en los campos para el Nombre y Apellido", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return; // Salir del método si la validación falla
+        }
+
+        // Validar teléfono (permitir solo números)
+        if (!telefono.matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(this, "Solo se permiten números (0 al 9) para el campo de Teléfono", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return; // Salir del método si la validación falla
+        }
+
+        // Verificar si todos los campos de texto tienen datos válidos
+        if (nombre.isEmpty() || apellidos.isEmpty() || telefono.isEmpty() || correo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Todos los campos deben ser completados", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return; // Salir del método si la validación falla
+        }
+
+        // Consulta SQL para insertar en la tabla 'cliente'
+        String insertQuery = "INSERT INTO cliente (nombre, apellidos, telefono, correo) VALUES (?, ?, ?, ?)";
+
+        try {
+            // Crear una declaración preparada
+            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+
+            // Establecer valores para los parámetros en la declaración preparada
+            preparedStatement.setString(1, nombre);
+            preparedStatement.setString(2, apellidos);
+            preparedStatement.setString(3, telefono);
+            preparedStatement.setString(4, correo);
+
+            // Ejecutar la consulta
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            // Cerrar la declaración preparada
+            preparedStatement.close();
+
+            // connection.commit();
+            if (rowsAffected > 0) {
+                // Si se afectaron filas, la inserción fue exitosa
+                JOptionPane.showMessageDialog(this, "Cliente registrado exitosamente", "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
+
+                // Mostrar información sobre el cliente recién registrado
+                displayClientInfo(connection, nombre, apellidos, telefono, correo);
+
+                // Limpiar campos de texto
+                jTextFieldNombreCliente.setText("");
+                jTextFieldApellidosCliente.setText("");
+                jTextFieldTelefonoCliente.setText("");
+                jTextFieldEmailCliente.setText("");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Manejar la excepción SQL según sea necesario
+        }
+    }
+
+    /**
+     * Método para mostrar la información de un cliente registrado.
+     *
+     * @param connection La conexión a la base de datos.
+     * @param nombre Nombre del cliente.
+     * @param apellidos Apellidos del cliente.
+     * @param telefono Teléfono del cliente.
+     * @param correo Correo electrónico del cliente.
+     */
+    private void displayClientInfo(Connection connection, String nombre, String apellidos, String telefono, String correo) {
+        // Consulta para recuperar información sobre el cliente recién registrado
+        String selectQuery = "SELECT * FROM cliente WHERE nombre = ? AND apellidos = ? AND telefono = ? AND correo = ?";
+
+        try {
+            // Crear una declaración preparada
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+
+            // Establecer valores para los parámetros en la declaración preparada
+            preparedStatement.setString(1, nombre);
+            preparedStatement.setString(2, apellidos);
+            preparedStatement.setString(3, telefono);
+            preparedStatement.setString(4, correo);
+
+            // Ejecutar la consulta
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // Mostrar información sobre el cliente recién registrado
+            if (resultSet.next()) {
+                int idCliente = resultSet.getInt("idCliente");
+                JOptionPane.showMessageDialog(this, "Información del Cliente:\nID: " + idCliente + "\nNombre: " + nombre
+                        + "\nApellidos: " + apellidos + "\nTeléfono: " + telefono + "\nCorreo: " + correo, "Información del Cliente", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            // Cerrar el conjunto de resultados y la declaración preparada
+            resultSet.close();
+            preparedStatement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Manejar la excepción SQL según sea necesario
+        }
     }
 
     /**
@@ -31,161 +148,165 @@ public class RegistroCliente extends javax.swing.JFrame {
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
-    
-    private void ResgistrarUsuario(){
-        try{
-        String nombre = new String(txtNombre.getText());
-        String Apellidos = new String(txtApellidos.getText());
-        String telefono = new String(txtTelefono.getText());
-        String Correo = new String(txtCorreo.getText());
-        Connection connection = ConexionBD.getConnection();
-        String sql = "INSERT INTO cliente (nombre, apellidos, telefono, correo) VALUES (?, ?, ?, ?)";
-        PreparedStatement statement = connection.prepareStatement(sql);
-            
-            statement.setString(1, nombre);
-            statement.setString(2, Apellidos);
-            statement.setString(3, telefono);
-            statement.setString(4, Correo);
-            ResultSet rs = statement.executeQuery(sql);
-        }catch(SQLException e){
-             System.out.println(e);
-        }
-    }
-    
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        txtNombre = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        txtApellidos = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        txtCorreo = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        txtTelefono = new javax.swing.JTextField();
-        lblRegresarReservacionBotonImagen = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        jPanelRegistroCliente = new javax.swing.JPanel();
+        jButtonRegresarRegistroCliente = new javax.swing.JButton();
+        jTextFieldTelefonoCliente = new javax.swing.JTextField();
+        jLabelNombreCliente = new javax.swing.JLabel();
+        jLabelApellidosCliente = new javax.swing.JLabel();
+        jLabelEmailCliente = new javax.swing.JLabel();
+        jLabelTelefonoCliente = new javax.swing.JLabel();
+        jTextFieldNombreCliente = new javax.swing.JTextField();
+        jTextFieldApellidosCliente = new javax.swing.JTextField();
+        jTextFieldEmailCliente = new javax.swing.JTextField();
+        jLabelLogoNeoTokio = new javax.swing.JLabel();
+        jLabelReservacionMesasTitulo = new javax.swing.JLabel();
+        jButtonRegistrarCliente = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(102, 102, 255));
+        jPanelRegistroCliente.setBackground(new java.awt.Color(32, 17, 72));
+        jPanelRegistroCliente.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(85, 231, 255), 5, true));
 
-        jLabel1.setFont(new java.awt.Font("Tempus Sans ITC", 0, 11)); // NOI18N
-        jLabel1.setText("INGRESE SU NOMBRE:");
-
-        jLabel3.setFont(new java.awt.Font("Tempus Sans ITC", 0, 11)); // NOI18N
-        jLabel3.setText("INGRESE SUS APELLIDOS");
-
-        jLabel4.setFont(new java.awt.Font("Tempus Sans ITC", 0, 11)); // NOI18N
-        jLabel4.setText("INGRESE SU CORREO ELECTRONICO: ");
-
-        jLabel5.setFont(new java.awt.Font("Tempus Sans ITC", 0, 11)); // NOI18N
-        jLabel5.setText("INGRESE EL NUMERO DE TELEFONICO:");
-
-        lblRegresarReservacionBotonImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/BotonRegresar.png"))); // NOI18N
-        lblRegresarReservacionBotonImagen.setText("Regresar");
-        lblRegresarReservacionBotonImagen.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblRegresarReservacionBotonImagenMouseClicked(evt);
+        jButtonRegresarRegistroCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/BotonRegresar.png"))); // NOI18N
+        jButtonRegresarRegistroCliente.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButtonRegresarRegistroCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRegresarRegistroClienteActionPerformed(evt);
             }
         });
 
-        jButton1.setFont(new java.awt.Font("Tempus Sans ITC", 0, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(51, 255, 51));
-        jButton1.setText("REGISTRARSE");
+        jTextFieldTelefonoCliente.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 28)); // NOI18N
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblRegresarReservacionBotonImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5)
-                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
-                            .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(54, 54, 54))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblRegresarReservacionBotonImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)))
-                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
-                .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                .addComponent(jLabel4)
-                .addGap(18, 18, 18)
-                .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46))
-        );
+        jLabelNombreCliente.setBackground(new java.awt.Color(85, 231, 255));
+        jLabelNombreCliente.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 30)); // NOI18N
+        jLabelNombreCliente.setForeground(new java.awt.Color(85, 231, 255));
+        jLabelNombreCliente.setText("Nombre :");
 
-        jLabel2.setFont(new java.awt.Font("Tempus Sans ITC", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(51, 255, 255));
-        jLabel2.setText("REGISTRO NEO TOKYO");
+        jLabelApellidosCliente.setBackground(new java.awt.Color(85, 231, 255));
+        jLabelApellidosCliente.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 30)); // NOI18N
+        jLabelApellidosCliente.setForeground(new java.awt.Color(85, 231, 255));
+        jLabelApellidosCliente.setText("Apellidos :");
+
+        jLabelEmailCliente.setBackground(new java.awt.Color(85, 231, 255));
+        jLabelEmailCliente.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 30)); // NOI18N
+        jLabelEmailCliente.setForeground(new java.awt.Color(85, 231, 255));
+        jLabelEmailCliente.setText("E-Mail :");
+
+        jLabelTelefonoCliente.setBackground(new java.awt.Color(85, 231, 255));
+        jLabelTelefonoCliente.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 30)); // NOI18N
+        jLabelTelefonoCliente.setForeground(new java.awt.Color(85, 231, 255));
+        jLabelTelefonoCliente.setText("Telefono :");
+
+        jTextFieldNombreCliente.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 28)); // NOI18N
+
+        jTextFieldApellidosCliente.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 28)); // NOI18N
+
+        jTextFieldEmailCliente.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 28)); // NOI18N
+
+        jLabelLogoNeoTokio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/Logo Neo Tokio.png"))); // NOI18N
+        jLabelLogoNeoTokio.setText("jLabel1");
+
+        jLabelReservacionMesasTitulo.setFont(new java.awt.Font("Bahiana", 2, 48)); // NOI18N
+        jLabelReservacionMesasTitulo.setForeground(new java.awt.Color(0, 204, 253));
+        jLabelReservacionMesasTitulo.setText("registro de clientes");
+
+        jButtonRegistrarCliente.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 36)); // NOI18N
+        jButtonRegistrarCliente.setText("Registrar Cliente");
+        jButtonRegistrarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRegistrarClienteActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelRegistroClienteLayout = new javax.swing.GroupLayout(jPanelRegistroCliente);
+        jPanelRegistroCliente.setLayout(jPanelRegistroClienteLayout);
+        jPanelRegistroClienteLayout.setHorizontalGroup(
+            jPanelRegistroClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelRegistroClienteLayout.createSequentialGroup()
+                .addComponent(jButtonRegresarRegistroCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(166, 166, 166)
+                .addComponent(jLabelReservacionMesasTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanelRegistroClienteLayout.createSequentialGroup()
+                .addGap(66, 66, 66)
+                .addGroup(jPanelRegistroClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabelTelefonoCliente)
+                    .addComponent(jLabelEmailCliente)
+                    .addComponent(jLabelApellidosCliente)
+                    .addComponent(jLabelNombreCliente))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelRegistroClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButtonRegistrarCliente)
+                    .addGroup(jPanelRegistroClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jTextFieldTelefonoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldEmailCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldApellidosCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelLogoNeoTokio, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanelRegistroClienteLayout.setVerticalGroup(
+            jPanelRegistroClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelRegistroClienteLayout.createSequentialGroup()
+                .addGroup(jPanelRegistroClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonRegresarRegistroCliente)
+                    .addGroup(jPanelRegistroClienteLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabelReservacionMesasTitulo)))
+                .addGroup(jPanelRegistroClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelRegistroClienteLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelRegistroClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelNombreCliente))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelRegistroClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldApellidosCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelApellidosCliente))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelRegistroClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldEmailCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelEmailCliente))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelRegistroClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldTelefonoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelTelefonoCliente)))
+                    .addGroup(jPanelRegistroClienteLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabelLogoNeoTokio)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonRegistrarCliente)
+                .addGap(0, 19, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(178, 178, 178))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanelRegistroCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jPanelRegistroCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lblRegresarReservacionBotonImagenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegresarReservacionBotonImagenMouseClicked
+    private void jButtonRegresarRegistroClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegresarRegistroClienteActionPerformed
         // TODO add your handling code here:
-        dispose();
-    }//GEN-LAST:event_lblRegresarReservacionBotonImagenMouseClicked
+        this.dispose();
+    }//GEN-LAST:event_jButtonRegresarRegistroClienteActionPerformed
+
+    private void jButtonRegistrarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegistrarClienteActionPerformed
+        // TODO add your handling code here:
+        setNuevoCliente();
+    }//GEN-LAST:event_jButtonRegistrarClienteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -223,17 +344,18 @@ public class RegistroCliente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblRegresarReservacionBotonImagen;
-    private javax.swing.JTextField txtApellidos;
-    private javax.swing.JTextField txtCorreo;
-    private javax.swing.JTextField txtNombre;
-    private javax.swing.JTextField txtTelefono;
+    private javax.swing.JButton jButtonRegistrarCliente;
+    private javax.swing.JButton jButtonRegresarRegistroCliente;
+    private javax.swing.JLabel jLabelApellidosCliente;
+    private javax.swing.JLabel jLabelEmailCliente;
+    private javax.swing.JLabel jLabelLogoNeoTokio;
+    private javax.swing.JLabel jLabelNombreCliente;
+    private javax.swing.JLabel jLabelReservacionMesasTitulo;
+    private javax.swing.JLabel jLabelTelefonoCliente;
+    private javax.swing.JPanel jPanelRegistroCliente;
+    private javax.swing.JTextField jTextFieldApellidosCliente;
+    private javax.swing.JTextField jTextFieldEmailCliente;
+    private javax.swing.JTextField jTextFieldNombreCliente;
+    private javax.swing.JTextField jTextFieldTelefonoCliente;
     // End of variables declaration//GEN-END:variables
 }

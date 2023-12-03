@@ -10,11 +10,9 @@ import java.util.Scanner;
 import java.sql.ResultSetMetaData;
 
 public class ConexionBD {
-
     private static final String JDBC_URL = "jdbc:mysql://Rayoscompany.com:3306/Proyecto";
     private static final String JDBC_USER = "java";
     private static final String JDBC_PASSWORD = "Java_proyecto123220224";
-
     public static Connection getConnection() {
         Connection conn = null;
         try {
