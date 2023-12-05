@@ -191,6 +191,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Galerias"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSucursalGaleriasActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButtonSucursalEspacio">
           <Properties>
@@ -205,6 +208,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Espacio"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSucursalEspacioActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButtonSucursalExpoPlaza">
           <Properties>
@@ -219,6 +225,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Expo Plaza"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSucursalExpoPlazaActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButtonSucursalAvUniversidad">
           <Properties>
@@ -233,6 +242,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Av. Universidad"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSucursalAvUniversidadActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButtonSucursalVillaAsuncion">
           <Properties>
@@ -247,6 +259,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Villa Asuncion"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSucursalVillaAsuncionActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>

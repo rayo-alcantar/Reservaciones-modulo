@@ -80,11 +80,25 @@ public class RegistroReservacion extends javax.swing.JFrame {
         // Obtiene los valores de los JTextFields
         String nombre = jTextFieldNombreReservacion.getText().toUpperCase();
         String apellidos = jTextFieldApellidosReservacion.getText().toUpperCase();
-        String correo = jTextFieldEmailReservacion.getText().toUpperCase();
         String telefono = jTextFieldTelefonoReservacion.getText().toUpperCase();
+        String correo = jTextFieldEmailReservacion.getText().toUpperCase();
+
+        // Validar nombre y apellidos (permitir solo letras)
+        if (!nombre.matches("[a-zA-Z\\s]+") || !apellidos.matches("[a-zA-Z\\s]+")) {
+            JOptionPane.showMessageDialog(null, "Solo se permiten letras en los campos para el Nombre y Apellido", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            clearTextFields();
+            return null; // Salir del método si la validación falla
+        }
+
+        // Validar teléfono (permitir solo números)
+        if (!telefono.matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(null, "Solo se permiten números (0 al 9) para el campo de Teléfono", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            clearTextFields();
+            return null; // Salir del método si la validación falla
+        }
 
         // Llama al método getIdCliente para buscar el ID del cliente
-        Integer idCliente = getIdCliente(nombre, apellidos, correo, telefono);
+        Integer idCliente = getIdCliente(nombre, apellidos, telefono, correo);
 
         if (idCliente != null) {
             // El cliente existe, se puede usar idCliente para operaciones adicionales
@@ -95,13 +109,19 @@ public class RegistroReservacion extends javax.swing.JFrame {
             System.out.println("Cliente no encontrado.");
 
             // Limpia todos los JTextFields
-            jTextFieldNombreReservacion.setText("");
-            jTextFieldApellidosReservacion.setText("");
-            jTextFieldEmailReservacion.setText("");
-            jTextFieldTelefonoReservacion.setText("");
+            clearTextFields();
         }
+
         // Llama al método getIdCliente para buscar el ID del cliente
-        return getIdCliente(nombre, apellidos, correo, telefono);
+        return idCliente;
+    }
+
+    // Método para limpiar todos los JTextFields
+    private void clearTextFields() {
+        jTextFieldNombreReservacion.setText("");
+        jTextFieldApellidosReservacion.setText("");
+        jTextFieldEmailReservacion.setText("");
+        jTextFieldTelefonoReservacion.setText("");
     }
 
     /**
@@ -114,15 +134,15 @@ public class RegistroReservacion extends javax.swing.JFrame {
      * @return Integer que representa el ID del cliente encontrado, o null si no
      * se encuentra.
      */
-    private Integer getIdCliente(String nombre, String apellidos, String correo, String telefono) {
+    private Integer getIdCliente(String nombre, String apellidos, String telefono, String correo) {
         Connection connection = ConexionBD.getConnection();
-        String query = "SELECT idCliente FROM cliente WHERE nombre = ? AND apellidos = ? AND correo = ? AND telefono = ?";
+        String query = "SELECT idCliente FROM cliente WHERE nombre = ? AND apellidos = ? AND telefono = ? AND correo = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, nombre);
             statement.setString(2, apellidos);
-            statement.setString(3, correo);
-            statement.setString(4, telefono);
+            statement.setString(3, telefono);
+            statement.setString(4, correo);
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -159,8 +179,8 @@ public class RegistroReservacion extends javax.swing.JFrame {
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
             // Establece los parámetros para la consulta de INSERT
             preparedStatement.setInt(1, idCliente);
-            preparedStatement.setString(2, fechaYHora.split(" ")[0]); // Inserting date only
-            preparedStatement.setString(3, fechaYHora.split(" ")[1]); // Inserting time only
+            preparedStatement.setString(2, fechaYHora.split(" ")[0]); // Insert solo para la fecha
+            preparedStatement.setString(3, fechaYHora.split(" ")[1]); // Insert solo para la hora
 
             for (Integer idMesa : idMesas) {
                 preparedStatement.setInt(4, idMesa);
@@ -170,16 +190,53 @@ public class RegistroReservacion extends javax.swing.JFrame {
 
                 if (rowsAffected > 0) {
                     System.out.println("Reservación para la mesa " + idMesa + " registrada correctamente.");
+
+                    // Llama el metodo encargado de hacer el UPDATE en la tabla mesa después que se confirma la reservacion con el usuario
+                    setEstadoMesa(idMesa);
                 } else {
                     System.out.println("Error al registrar la reservación para la mesa " + idMesa + ".");
                 }
             }
 
+            // Calcula la fecha y hora límite para llegar al restaurante (fecha y hora actual + 20 minutos)
+            LocalDateTime limiteDateTime = LocalDateTime.now().plusMinutes(20);
+
+            // Formatea la fecha y hora límite usando un patrón específico
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String limiteFormattedDateTime = limiteDateTime.format(formatter);
+
             // Muestra un cuadro de diálogo de éxito después del INSERT exitoso
-            String successMessage = "Reservación exitosa para el cliente con ID: " + idCliente
-                    + " en las mesas: " + Arrays.toString(idMesas);
+            String successMessage = "Reservación exitosa para mesa(s): " + Arrays.toString(idMesas)
+                    + ". La fecha y hora límite para llegar al restaurante es: " + limiteFormattedDateTime;
             JOptionPane.showMessageDialog(null, successMessage, "Reservación Exitosa", JOptionPane.INFORMATION_MESSAGE);
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConexionBD.closeConnection(connection);
+        }
+    }
+
+    private void setEstadoMesa(Integer idMesa) {
+        // Conexión a la base de datos
+        Connection connection = ConexionBD.getConnection();
+
+        // Consulta de UPDATE para cambiar el estado de la mesa (Estado 2 es para indicar que esta ocupada)
+        String queryMesaOcupada = "UPDATE mesa SET estado = 2 WHERE idMesa = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(queryMesaOcupada)) {
+            // Establece el parámetro para la consulta de UPDATE
+            preparedStatement.setInt(1, idMesa);
+
+            // Ejecuta la consulta para hacer el UPDATE en la tabla mesa
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            // Mensajes en consola para verificar que la consulta se ejecuto sin problemas
+            if (rowsAffected > 0) {
+                System.out.println("Estado de la mesa " + idMesa + " actualizado a ocupado.");
+            } else {
+                System.out.println("Error al actualizar el estado de la mesa" + idMesa);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -273,29 +330,34 @@ public class RegistroReservacion extends javax.swing.JFrame {
             .addGroup(jPanelReservacionLayout.createSequentialGroup()
                 .addGroup(jPanelReservacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelReservacionLayout.createSequentialGroup()
-                        .addGap(294, 294, 294)
-                        .addComponent(jButtonRegistrarReservacion))
+                        .addComponent(jButtonRegresarRegistroReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(154, 154, 154)
+                        .addComponent(jLabelReservacionMesasTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanelReservacionLayout.createSequentialGroup()
                         .addGap(62, 62, 62)
                         .addGroup(jPanelReservacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabelTelefonoReservacion)
-                            .addComponent(jLabelEmailReservacion)
-                            .addComponent(jLabelApellidosReservacion)
-                            .addComponent(jLabelNombreReservacion))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanelReservacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldTelefonoReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldEmailReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldApellidosReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldNombreReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelReservacionLayout.createSequentialGroup()
+                                .addGroup(jPanelReservacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabelApellidosReservacion)
+                                    .addComponent(jLabelNombreReservacion))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanelReservacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextFieldApellidosReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextFieldNombreReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanelReservacionLayout.createSequentialGroup()
+                                .addComponent(jLabelTelefonoReservacion)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextFieldTelefonoReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelReservacionLayout.createSequentialGroup()
+                                .addComponent(jLabelEmailReservacion)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextFieldEmailReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(32, 32, 32)
                         .addComponent(jLabelLogoNeoTokio, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelReservacionLayout.createSequentialGroup()
-                        .addComponent(jButtonRegresarRegistroReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(154, 154, 154)
-                        .addComponent(jLabelReservacionMesasTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(213, 213, 213)))
-                .addContainerGap(81, Short.MAX_VALUE))
+                    .addGroup(jPanelReservacionLayout.createSequentialGroup()
+                        .addGap(247, 247, 247)
+                        .addComponent(jButtonRegistrarReservacion)))
+                .addContainerGap(95, Short.MAX_VALUE))
         );
         jPanelReservacionLayout.setVerticalGroup(
             jPanelReservacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -307,6 +369,9 @@ public class RegistroReservacion extends javax.swing.JFrame {
                     .addComponent(jLabelReservacionMesasTitulo, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGroup(jPanelReservacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelReservacionLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelLogoNeoTokio))
+                    .addGroup(jPanelReservacionLayout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addGroup(jPanelReservacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextFieldNombreReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -315,20 +380,17 @@ public class RegistroReservacion extends javax.swing.JFrame {
                         .addGroup(jPanelReservacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextFieldApellidosReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabelApellidosReservacion))
+                        .addGap(19, 19, 19)
+                        .addGroup(jPanelReservacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldTelefonoReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelTelefonoReservacion))
                         .addGap(18, 18, 18)
                         .addGroup(jPanelReservacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextFieldEmailReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelEmailReservacion))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanelReservacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextFieldTelefonoReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelTelefonoReservacion)))
-                    .addGroup(jPanelReservacionLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelLogoNeoTokio)))
-                .addGap(35, 35, 35)
+                            .addComponent(jLabelEmailReservacion))))
+                .addGap(18, 18, 18)
                 .addComponent(jButtonRegistrarReservacion)
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -336,13 +398,12 @@ public class RegistroReservacion extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanelReservacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanelReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelReservacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanelReservacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();

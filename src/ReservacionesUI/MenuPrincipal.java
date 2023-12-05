@@ -66,26 +66,51 @@ public class MenuPrincipal extends javax.swing.JFrame {
         jButtonSucursalGalerias.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 48)); // NOI18N
         jButtonSucursalGalerias.setForeground(new java.awt.Color(32, 17, 72));
         jButtonSucursalGalerias.setText("Galerias");
+        jButtonSucursalGalerias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSucursalGaleriasActionPerformed(evt);
+            }
+        });
 
         jButtonSucursalEspacio.setBackground(new java.awt.Color(85, 231, 255));
         jButtonSucursalEspacio.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 48)); // NOI18N
         jButtonSucursalEspacio.setForeground(new java.awt.Color(32, 17, 72));
         jButtonSucursalEspacio.setText("Espacio");
+        jButtonSucursalEspacio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSucursalEspacioActionPerformed(evt);
+            }
+        });
 
         jButtonSucursalExpoPlaza.setBackground(new java.awt.Color(85, 231, 255));
         jButtonSucursalExpoPlaza.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 48)); // NOI18N
         jButtonSucursalExpoPlaza.setForeground(new java.awt.Color(32, 17, 72));
         jButtonSucursalExpoPlaza.setText("Expo Plaza");
+        jButtonSucursalExpoPlaza.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSucursalExpoPlazaActionPerformed(evt);
+            }
+        });
 
         jButtonSucursalAvUniversidad.setBackground(new java.awt.Color(85, 231, 255));
         jButtonSucursalAvUniversidad.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 36)); // NOI18N
         jButtonSucursalAvUniversidad.setForeground(new java.awt.Color(32, 17, 72));
         jButtonSucursalAvUniversidad.setText("Av. Universidad");
+        jButtonSucursalAvUniversidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSucursalAvUniversidadActionPerformed(evt);
+            }
+        });
 
         jButtonSucursalVillaAsuncion.setBackground(new java.awt.Color(85, 231, 255));
         jButtonSucursalVillaAsuncion.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 36)); // NOI18N
         jButtonSucursalVillaAsuncion.setForeground(new java.awt.Color(32, 17, 72));
         jButtonSucursalVillaAsuncion.setText("Villa Asuncion");
+        jButtonSucursalVillaAsuncion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSucursalVillaAsuncionActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Barlow Condensed Light", 1, 20)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 204, 253));
@@ -193,6 +218,41 @@ public class MenuPrincipal extends javax.swing.JFrame {
         // Hacer visible la nueva ventana
         registroCliente.setVisible(true);
     }//GEN-LAST:event_jButtonAbrirRegistroClienteActionPerformed
+
+    private void jButtonSucursalGaleriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSucursalGaleriasActionPerformed
+        // TODO add your handling code here:
+         // Acción al hacer clic en el botón de la sucursal Galerias, se mostrara la ventana de la sucursal Galerias.
+        Sucursal_Galerias sucursalGalerias = new Sucursal_Galerias();
+        sucursalGalerias.setVisible(true);
+    }//GEN-LAST:event_jButtonSucursalGaleriasActionPerformed
+
+    private void jButtonSucursalEspacioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSucursalEspacioActionPerformed
+        // TODO add your handling code here:
+         // Acción al hacer clic en el botón de la sucursal Espacio, se mostrara la ventana de la sucursal Espacio.
+        Sucursal_Espacio sucursalEspacio = new Sucursal_Espacio();
+        sucursalEspacio.setVisible(true);
+    }//GEN-LAST:event_jButtonSucursalEspacioActionPerformed
+
+    private void jButtonSucursalExpoPlazaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSucursalExpoPlazaActionPerformed
+        // TODO add your handling code here:
+          // Acción al hacer clic en el botón de la sucursal  ExpoPlaza, se mostrara la ventana de la sucursal ExpoPlaza.
+        Sucursal_ExpoPlaza sucursalExpoplaza = new Sucursal_ExpoPlaza();
+        sucursalExpoplaza.setVisible(true);
+    }//GEN-LAST:event_jButtonSucursalExpoPlazaActionPerformed
+
+    private void jButtonSucursalAvUniversidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSucursalAvUniversidadActionPerformed
+        // TODO add your handling code here:
+         // Acción al hacer clic en el botón de la sucursal Av. Universidad, se mostrara la ventana de la sucursal Av. Universidad.
+        Sucursal_AvUniversidad sucursalAvuniversidad = new Sucursal_AvUniversidad();
+        sucursalAvuniversidad.setVisible(true);
+    }//GEN-LAST:event_jButtonSucursalAvUniversidadActionPerformed
+
+    private void jButtonSucursalVillaAsuncionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSucursalVillaAsuncionActionPerformed
+        // TODO add your handling code here:
+         // Acción al hacer clic en el botón de la sucursal Villa Asuncion, se mostrara la ventana de la sucursal Villa Asuncion.
+        Sucursal_VillaAsuncion sucursalVillaasuncion = new Sucursal_VillaAsuncion();
+        sucursalVillaasuncion.setVisible(true);
+    }//GEN-LAST:event_jButtonSucursalVillaAsuncionActionPerformed
 
     /**
      * @param args the command line arguments
