@@ -80,7 +80,7 @@ public class RegistroReservacion extends javax.swing.JFrame {
         // Obtiene los valores de los JTextFields
         String nombre = jTextFieldNombreReservacion.getText().toUpperCase();
         String apellidos = jTextFieldApellidosReservacion.getText().toUpperCase();
-        String telefono = jTextFieldTelefonoReservacion.getText().toUpperCase();
+        String telefono = jTextFieldTelefonoReservacion.getText();
         String correo = jTextFieldEmailReservacion.getText().toUpperCase();
 
         // Validar nombre y apellidos (permitir solo letras)
