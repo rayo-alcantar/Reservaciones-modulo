@@ -176,7 +176,7 @@ public class RegistroReservacion extends javax.swing.JFrame {
      * @param idMesas Arreglo de IDs de las mesas seleccionadas para la
      * reservación.
      */
-    private void generarYAbrirPDFReservacion(Integer idCliente, Integer[] idMesas, String fechaYHora) {
+    private void generarYAbrirPDFReservacion(Integer idCliente, Integer[] idMesas, String fechaYHora, String nombreCliente, String apellidosCliente, String telefonoCliente, String nombreSucursal) {
         String filename = "reservacion_" + idCliente + ".pdf";
 
         try (PDDocument document = new PDDocument()) {
@@ -192,6 +192,14 @@ public class RegistroReservacion extends javax.swing.JFrame {
                 contentStream.showText("Detalles de la Reservación:");
                 contentStream.newLine();
                 contentStream.showText("Folio de Reservación: " + idCliente); // Asumiendo que el ID del cliente es el folio
+                contentStream.newLine();
+                contentStream.showText("Nombre del Cliente: " + nombreCliente);
+                contentStream.newLine();
+                contentStream.showText("Apellidos del Cliente: " + apellidosCliente);
+                contentStream.newLine();
+                contentStream.showText("Teléfono del Cliente: " + telefonoCliente);
+                contentStream.newLine();
+                contentStream.showText("Sucursal: " + nombreSucursal);
                 contentStream.newLine();
                 contentStream.showText("Mesas Reservadas: " + Arrays.toString(idMesas));
                 contentStream.newLine();
@@ -253,7 +261,7 @@ public class RegistroReservacion extends javax.swing.JFrame {
                 }
             }
             // Llamada al método para generar y abrir el PDF
-            generarYAbrirPDFReservacion(idCliente, idMesas, fechaYHora);
+            generarYAbrirPDFReservacion(idCliente, idMesas, fechaYHora, nombreCliente, apellidosCliente, telefonoCliente, nombreSucursal);
             // Calcula la fecha y hora límite para llegar al restaurante (fecha y hora actual + 20 minutos)
             LocalDateTime limiteDateTime = LocalDateTime.now().plusMinutes(20);
 
