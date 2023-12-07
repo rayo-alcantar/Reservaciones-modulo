@@ -235,7 +235,23 @@ public class RegistroReservacion extends javax.swing.JFrame {
 
         // Conexión a la base de datos
         Connection connection = ConexionBD.getConnection();
-
+        String nombreCliente = "";
+        String apellidosCliente = "";
+        String telefonoCliente = "";
+    
+        // Consulta para obtener los datos del cliente
+        String queryCliente = "SELECT nombre, apellidos, telefono FROM cliente WHERE idCliente = ?";
+        try (PreparedStatement statementCliente = connection.prepareStatement(queryCliente)) {
+            statementCliente.setInt(1, idCliente);
+            ResultSet resultSet = statementCliente.executeQuery();
+            if (resultSet.next()) {
+                nombreCliente = resultSet.getString("nombre");
+                apellidosCliente = resultSet.getString("apellidos");
+                telefonoCliente = resultSet.getString("telefono");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         // Consulta de INSERT para la reservación
         String insertQuery = "INSERT INTO reservacion (idCliente, fecha, hora, idMesa) VALUES (?, ?, ?, ?)";
 
