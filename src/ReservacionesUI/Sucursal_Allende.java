@@ -24,6 +24,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 
+
+
 /**
  * Clase principal para la interfaz de usuario del sistema de reservas
  * Muestra las mesas disponibles y permite al usuario hacer reservas.
@@ -35,12 +37,15 @@ public class Sucursal_Allende extends javax.swing.JFrame {
     // Lista para almacenar los ID de las mesas seleccionadas.
     private ArrayList<Integer> selectedMesas = new ArrayList<>();
 
+        
     /**
      * Crea una nueva instancia de la clase Sucursal_Allende.
      * Inicializa los componentes de la interfaz de usuario y obtiene información sobre las mesas disponibles.
      */
     public Sucursal_Allende() {
         initComponents();
+    
+            
         getMesas();
     }
     
@@ -541,29 +546,40 @@ public class Sucursal_Allende extends javax.swing.JFrame {
         // TODO add your handling code here:
         // Verifica si todas las mesas seleccionadas están disponibles
         boolean allMesasAvailable = true;
+        boolean MesaSelected = true;
         for (Integer mesaId : selectedMesas) {
             int estado = getMesaEstadoById(mesaId);
             if (estado != 1) {
                 allMesasAvailable = false;
                 break;  //Se cierra la ventana si alguna mesa seleccionada no esta disponible.
             }
+            
         }
+        if(jCheckBoxMesa1.isSelected()==false && jCheckBoxMesa2.isSelected()==false && jCheckBoxMesa3.isSelected()==false && jCheckBoxMesa4.isSelected()==false && jCheckBoxMesa5.isSelected()==false && jCheckBoxMesa6.isSelected()==false && jCheckBoxMesa7.isSelected()==false && jCheckBoxMesa8.isSelected()==false && jCheckBoxMesa9.isSelected()==false && jCheckBoxMesa10.isSelected()==false){
+            MesaSelected= false;
+        }
+        
+        if(MesaSelected){
+            if (allMesasAvailable) {
+                // Pregunta al usuario si está registrado
+                int option = JOptionPane.showConfirmDialog(null, "Necesitas estar registrado para hacer tu reservación. ¿Ya estás registrado en nuestro sistema?", "Registro", JOptionPane.YES_NO_OPTION);
 
-        if (allMesasAvailable) {
-            // Pregunta al usuario si está registrado
-            int option = JOptionPane.showConfirmDialog(null, "Necesitas estar registrado para hacer tu reservación. ¿Ya estás registrado en nuestro sistema?", "Registro", JOptionPane.YES_NO_OPTION);
-
-            if (option == JOptionPane.YES_OPTION) {
-                // El usuario está registrado, abre la ventana de registro de reservas
-                enviarMesasSeleccionadas();
+                if (option == JOptionPane.YES_OPTION) {
+                    // El usuario está registrado, abre la ventana de registro de reservas
+                    enviarMesasSeleccionadas();
+                } else {
+                    // Cliente no está registrado, se abre la ventana de registro de clientes
+                    RegistroCliente registroCliente = new RegistroCliente();
+                    registroCliente.setVisible(true);
+                }
             } else {
-                // Cliente no está registrado, se abre la ventana de registro de clientes
-                RegistroCliente registroCliente = new RegistroCliente();
-                registroCliente.setVisible(true);
+
+                // Muestra un mensaje de error si alguna mesa seleccionada no está disponible
+
+                JOptionPane.showMessageDialog(null, "Error, solo puedes reservar mesas que estén actualmente disponibles.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            // Muestra un mensaje de error si alguna mesa seleccionada no está disponible
-            JOptionPane.showMessageDialog(null, "Error, solo puedes reservar mesas que estén actualmente disponibles.", "Error", JOptionPane.ERROR_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, "Error, Debe seleccionar una mesa para reservar.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButtonReservarMesasActionPerformed
 
@@ -594,6 +610,16 @@ public class Sucursal_Allende extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

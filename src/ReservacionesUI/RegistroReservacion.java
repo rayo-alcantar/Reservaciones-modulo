@@ -3,6 +3,12 @@ package ReservacionesUI;
 // import necesaria para la conexión a la base de datos
 import conexion.ConexionBD;
 
+// imports necesarios para la generacion de archivos PDF
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
 // imports necesarios para interactuar con bases de datos mediante JDBC
 import java.sql.Connection;
 import java.sql.PreparedStatement;
