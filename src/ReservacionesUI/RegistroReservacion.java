@@ -227,7 +227,6 @@ public class RegistroReservacion extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
-    
 
     private void setReservacion(Integer idCliente, Integer[] idMesas) {
         // Obtiene la fecha y hora formateadas
@@ -238,7 +237,8 @@ public class RegistroReservacion extends javax.swing.JFrame {
         String nombreCliente = "";
         String apellidosCliente = "";
         String telefonoCliente = "";
-    
+        String nombreSucursal = "";
+
         // Consulta para obtener los datos del cliente
         String queryCliente = "SELECT nombre, apellidos, telefono FROM cliente WHERE idCliente = ?";
         try (PreparedStatement statementCliente = connection.prepareStatement(queryCliente)) {
@@ -252,6 +252,22 @@ public class RegistroReservacion extends javax.swing.JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        // Consulta para obtener el nombre de la sucursal para cada idMesa en el array
+        String querySucursal = "SELECT s.nombre FROM sucursal s JOIN mesa m ON s.idSucursal = m.idSucursal WHERE m.idMesa = ?";
+        for (Integer idMesa : idMesas) {
+            try (PreparedStatement statementSucursal = connection.prepareStatement(querySucursal)) {
+                statementSucursal.setInt(1, idMesa); 
+                ResultSet resultSetSucursal = statementSucursal.executeQuery();
+                if (resultSetSucursal.next()) {
+                    nombreSucursal = resultSetSucursal.getString("nombre");
+                    System.out.println("Nombre de sucursal para idMesa " + idMesa + ": " + nombreSucursal);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
         // Consulta de INSERT para la reservación
         String insertQuery = "INSERT INTO reservacion (idCliente, fecha, hora, idMesa) VALUES (?, ?, ?, ?)";
 
