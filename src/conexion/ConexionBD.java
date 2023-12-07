@@ -11,18 +11,18 @@ import java.sql.ResultSetMetaData;
 
 public class ConexionBD {
     
+    /*
     // Conexion BD Equipo01
     private static final String JDBC_URL = "jdbc:mysql://148.211.124.58:3306/neotokio";
     private static final String JDBC_USER = "neotokio";
     private static final String JDBC_PASSWORD = "jFrB)(A!_s1AYwj0";
+    */
     
-    /*
     // Conexion BD Angel
     private static final String JDBC_URL = "jdbc:mysql://Rayoscompany.com:3306/Proyecto";
     private static final String JDBC_USER = "java";
     private static final String JDBC_PASSWORD = "Java_proyecto123220224";
-   */
-   
+      
     public static Connection getConnection() {
         Connection conn = null;
         try {

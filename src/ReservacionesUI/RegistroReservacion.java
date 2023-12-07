@@ -27,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 
 // import de estructuras de datos para almacenar y manipular listas de elementos
 import java.util.Arrays;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 
 /**
  * Clase que representa la interfaz de registro de reservaciones en Neo Tokio.
@@ -175,20 +176,19 @@ public class RegistroReservacion extends javax.swing.JFrame {
      * @param idMesas Arreglo de IDs de las mesas seleccionadas para la
      * reservación.
      */
-    
     private void generarYAbrirPDFReservacion(Integer idCliente, Integer[] idMesas, String fechaYHora) {
         String filename = "reservacion_" + idCliente + ".pdf";
-    
+
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage();
             document.addPage(page);
-    
+
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
                 contentStream.beginText();
-                contentStream.setFont(PDType1Font.HELVETICA, 12);
+                contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 14);
                 contentStream.setLeading(14.5f);
                 contentStream.newLineAtOffset(25, 700);
-    
+
                 contentStream.showText("Detalles de la Reservación:");
                 contentStream.newLine();
                 contentStream.showText("Folio de Reservación: " + idCliente); // Asumiendo que el ID del cliente es el folio
@@ -197,12 +197,12 @@ public class RegistroReservacion extends javax.swing.JFrame {
                 contentStream.newLine();
                 contentStream.showText("Fecha y Hora: " + fechaYHora);
                 contentStream.newLine();
-    
+
                 contentStream.endText();
             }
-    
+
             document.save(filename);
-    
+
             // Abrir el PDF generado
             if (Desktop.isDesktopSupported()) {
                 try {
@@ -218,6 +218,9 @@ public class RegistroReservacion extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error al generar el archivo PDF.", "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
+    }
+    
+
     private void setReservacion(Integer idCliente, Integer[] idMesas) {
         // Obtiene la fecha y hora formateadas
         String fechaYHora = getFechaYHora();
