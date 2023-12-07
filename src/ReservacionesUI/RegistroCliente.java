@@ -129,8 +129,14 @@ public class RegistroCliente extends javax.swing.JFrame {
             // Mostrar información sobre el cliente recién registrado
             if (resultSet.next()) {
                 int idCliente = resultSet.getInt("idCliente");
-                JOptionPane.showMessageDialog(this, "Información del Cliente:\nID: " + idCliente + "\nNombre: " + nombre
-                        + "\nApellidos: " + apellidos + "\nTeléfono: " + telefono + "\nCorreo: " + correo, "Información del Cliente", JOptionPane.INFORMATION_MESSAGE);
+                String clientInfo = "Información del Cliente:\nID: " + idCliente + "\nNombre: " + nombre
+                        + "\nApellidos: " + apellidos + "\nTeléfono: " + telefono + "\nCorreo: " + correo;
+
+                // Show the information using JOptionPane
+                JOptionPane.showMessageDialog(this, clientInfo, "Información del Cliente", JOptionPane.INFORMATION_MESSAGE);
+
+                // Dispose of the JFrame after the user clicks "OK"
+                dispose();
             }
 
             // Cerrar el conjunto de resultados y la declaración preparada

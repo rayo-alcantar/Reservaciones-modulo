@@ -24,50 +24,48 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 
-
-
 /**
- * Clase principal para la interfaz de usuario del sistema de reservas
- * Muestra las mesas disponibles y permite al usuario hacer reservas.
- * 
+ * Clase principal para la interfaz de usuario del sistema de reservas Muestra
+ * las mesas disponibles y permite al usuario hacer reservas.
+ *
  * @author Pedro
  */
 public class Sucursal_Allende extends javax.swing.JFrame {
-    
+
     // Lista para almacenar los ID de las mesas seleccionadas.
     private ArrayList<Integer> selectedMesas = new ArrayList<>();
 
-        
     /**
-     * Crea una nueva instancia de la clase Sucursal_Allende.
-     * Inicializa los componentes de la interfaz de usuario y obtiene información sobre las mesas disponibles.
+     * Crea una nueva instancia de la clase Sucursal_Allende. Inicializa los
+     * componentes de la interfaz de usuario y obtiene información sobre las
+     * mesas disponibles.
      */
     public Sucursal_Allende() {
         initComponents();
-    
-            
+
         getMesas();
     }
-    
+
     /**
-     * Obtiene información sobre las mesas disponibles desde la base datos y actualiza la interfaz de usuario en consecuencia.
+     * Obtiene información sobre las mesas disponibles desde la base datos y
+     * actualiza la interfaz de usuario en consecuencia.
      */
     private void getMesas() {
         // Establece la conexión a la base de datos
         Connection connection = ConexionBD.getConnection();
-        
+
         // Consulta SQL para obtener información sobre las mesas disponibles en la sucursal actual
         String queryMesas = "SELECT idMesa, estado FROM mesa WHERE idSucursal = 1";
 
         try (PreparedStatement statement = connection.prepareStatement(queryMesas)) {
             // Ejecuta la consulta y obtiene los resultados
             ResultSet resultSet = statement.executeQuery();
-           
+
             // Itera sobre los resultados para actualizar la interfaz de usuario con la información de las mesas
             while (resultSet.next()) {
                 int idMesa = resultSet.getInt("idMesa");
                 int estado = resultSet.getInt("estado");
-               
+
                 // Establece el icono y el estado del checkbox de la mesa según su disponibilidad
                 switch (idMesa) {
                     case 1:
@@ -121,11 +119,12 @@ public class Sucursal_Allende extends javax.swing.JFrame {
     }
 
     /**
-     * Establece el icono y comportamiento de un checkbox de mesa según su disponibilidad.
-     * 
+     * Establece el icono y comportamiento de un checkbox de mesa según su
+     * disponibilidad.
+     *
      * @param checkbox El checkbox que representa la mesa en la sucursal.
-     * @param estado       El estado de disponibildad de la mesa.
-     * @param idMesa      El ID de la mesa.
+     * @param estado El estado de disponibildad de la mesa.
+     * @param idMesa El ID de la mesa.
      */
     private void setMesaIcon(JCheckBox checkbox, int estado, int idMesa) {
         // Rutas de los iconos según el estado de disponibilidad
@@ -178,15 +177,16 @@ public class Sucursal_Allende extends javax.swing.JFrame {
     }
 
     /**
-     * Obtiene el estado de disponibilidad de una mesa según su ID desde la base de datos.
-     * 
+     * Obtiene el estado de disponibilidad de una mesa según su ID desde la base
+     * de datos.
+     *
      * @param mesaId El ID de la mesa.
-     * @return                 El estado de disponbilidad de la mesa
+     * @return El estado de disponbilidad de la mesa
      */
     private int getMesaEstadoById(int mesaId) {
         // Establece la conexión a la base de datos
         Connection connection = ConexionBD.getConnection();
-        
+
         // Consulta SQL para obtener el estado de disponibilidad para la mesa según su ID
         String queryEstado = "SELECT estado FROM mesa WHERE idMesa = ?";
 
@@ -212,9 +212,9 @@ public class Sucursal_Allende extends javax.swing.JFrame {
             ConexionBD.closeConnection(connection);
         }
     }
-    
+
     /**
-     *  Abre la ventana de registro de reservas con las mesas seleccionadas.
+     * Abre la ventana de registro de reservas con las mesas seleccionadas.
      */
     private void enviarMesasSeleccionadas() {
         // Convierte la lista de mesas seleccionadas a un array y abre la ventana de registro de reservas
@@ -524,8 +524,9 @@ public class Sucursal_Allende extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Maneja el evento de clic en el botón de "Regresar" de la interfaz de usuario.
-     * Cierra la ventana actual.
+     * Maneja el evento de clic en el botón de "Regresar" de la interfaz de
+     * usuario. Cierra la ventana actual.
+     *
      * @param evt Evento de acción generado por el boton
      */
     private void jButtonRegresarSucursal1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegresarSucursal1ActionPerformed
@@ -535,11 +536,13 @@ public class Sucursal_Allende extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonRegresarSucursal1ActionPerformed
 
     /**
-     * Maneja el evento de clic en el botón "Reservar Mesas" de la interfaz de usuario.
-     * Verifica la disponbilidad de las mesas seleccionadas y solicita al usuario que esté registrado.
-     * Abre la ventana de registro de reservas si el usuario está registrado, de lo contrario, abre la ventana de registro de clientes.
-     * Muestra un mensaje de error si alguna mesa seleccionada no está disponible.
-     * 
+     * Maneja el evento de clic en el botón "Reservar Mesas" de la interfaz de
+     * usuario. Verifica la disponbilidad de las mesas seleccionadas y solicita
+     * al usuario que esté registrado. Abre la ventana de registro de reservas
+     * si el usuario está registrado, de lo contrario, abre la ventana de
+     * registro de clientes. Muestra un mensaje de error si alguna mesa
+     * seleccionada no está disponible.
+     *
      * @param evt Evento de acción generado por el botón
      */
     private void jButtonReservarMesasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReservarMesasActionPerformed
@@ -553,13 +556,13 @@ public class Sucursal_Allende extends javax.swing.JFrame {
                 allMesasAvailable = false;
                 break;  //Se cierra la ventana si alguna mesa seleccionada no esta disponible.
             }
-            
+
         }
-        if(jCheckBoxMesa1.isSelected()==false && jCheckBoxMesa2.isSelected()==false && jCheckBoxMesa3.isSelected()==false && jCheckBoxMesa4.isSelected()==false && jCheckBoxMesa5.isSelected()==false && jCheckBoxMesa6.isSelected()==false && jCheckBoxMesa7.isSelected()==false && jCheckBoxMesa8.isSelected()==false && jCheckBoxMesa9.isSelected()==false && jCheckBoxMesa10.isSelected()==false){
-            MesaSelected= false;
+        if (jCheckBoxMesa1.isSelected() == false && jCheckBoxMesa2.isSelected() == false && jCheckBoxMesa3.isSelected() == false && jCheckBoxMesa4.isSelected() == false && jCheckBoxMesa5.isSelected() == false && jCheckBoxMesa6.isSelected() == false && jCheckBoxMesa7.isSelected() == false && jCheckBoxMesa8.isSelected() == false && jCheckBoxMesa9.isSelected() == false && jCheckBoxMesa10.isSelected() == false) {
+            MesaSelected = false;
         }
-        
-        if(MesaSelected){
+
+        if (MesaSelected) {
             if (allMesasAvailable) {
                 // Pregunta al usuario si está registrado
                 int option = JOptionPane.showConfirmDialog(null, "Necesitas estar registrado para hacer tu reservación. ¿Ya estás registrado en nuestro sistema?", "Registro", JOptionPane.YES_NO_OPTION);
@@ -575,10 +578,9 @@ public class Sucursal_Allende extends javax.swing.JFrame {
             } else {
 
                 // Muestra un mensaje de error si alguna mesa seleccionada no está disponible
-
                 JOptionPane.showMessageDialog(null, "Error, solo puedes reservar mesas que estén actualmente disponibles.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Error, Debe seleccionar una mesa para reservar.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButtonReservarMesasActionPerformed
@@ -610,16 +612,6 @@ public class Sucursal_Allende extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
