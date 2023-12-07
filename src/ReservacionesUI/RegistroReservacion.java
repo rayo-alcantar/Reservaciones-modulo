@@ -8,6 +8,9 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 
 // imports necesarios para interactuar con bases de datos mediante JDBC
 import java.sql.Connection;
@@ -172,6 +175,49 @@ public class RegistroReservacion extends javax.swing.JFrame {
      * @param idMesas Arreglo de IDs de las mesas seleccionadas para la
      * reservación.
      */
+    
+    private void generarYAbrirPDFReservacion(Integer idCliente, Integer[] idMesas, String fechaYHora) {
+        String filename = "reservacion_" + idCliente + ".pdf";
+    
+        try (PDDocument document = new PDDocument()) {
+            PDPage page = new PDPage();
+            document.addPage(page);
+    
+            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                contentStream.beginText();
+                contentStream.setFont(PDType1Font.HELVETICA, 12);
+                contentStream.setLeading(14.5f);
+                contentStream.newLineAtOffset(25, 700);
+    
+                contentStream.showText("Detalles de la Reservación:");
+                contentStream.newLine();
+                contentStream.showText("Folio de Reservación: " + idCliente); // Asumiendo que el ID del cliente es el folio
+                contentStream.newLine();
+                contentStream.showText("Mesas Reservadas: " + Arrays.toString(idMesas));
+                contentStream.newLine();
+                contentStream.showText("Fecha y Hora: " + fechaYHora);
+                contentStream.newLine();
+    
+                contentStream.endText();
+            }
+    
+            document.save(filename);
+    
+            // Abrir el PDF generado
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    File pdfFile = new File(filename);
+                    Desktop.getDesktop().open(pdfFile);
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, "Error al abrir el archivo PDF.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "No se puede abrir el archivo PDF en este sistema.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al generar el archivo PDF.", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     private void setReservacion(Integer idCliente, Integer[] idMesas) {
         // Obtiene la fecha y hora formateadas
         String fechaYHora = getFechaYHora();
@@ -203,7 +249,8 @@ public class RegistroReservacion extends javax.swing.JFrame {
                     System.out.println("Error al registrar la reservación para la mesa " + idMesa + ".");
                 }
             }
-
+            // Llamada al método para generar y abrir el PDF
+            generarYAbrirPDFReservacion(idCliente, idMesas, fechaYHora);
             // Calcula la fecha y hora límite para llegar al restaurante (fecha y hora actual + 20 minutos)
             LocalDateTime limiteDateTime = LocalDateTime.now().plusMinutes(20);
 
