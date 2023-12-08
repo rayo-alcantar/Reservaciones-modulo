@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
  * Clase principal para la interfaz de usuario del sistema de reservas Muestra
  * las mesas disponibles y permite al usuario hacer reservas.
  *
- * @author Pedro
+ * @author Pedro Quiroz
  */
 public class Sucursal_Allende extends javax.swing.JFrame {
 

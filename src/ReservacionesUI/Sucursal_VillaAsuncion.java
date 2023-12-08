@@ -25,7 +25,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 /**
  *
- * @author pedro
+ * @author Pedro Quiroz
  */
 public class Sucursal_VillaAsuncion extends javax.swing.JFrame {
 

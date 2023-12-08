@@ -60,6 +60,14 @@ public class RegistroCliente extends javax.swing.JFrame {
             return; // Salir del método si la validación falla
         }
 
+        // Llamado del metodo getClienteExsistente para verificar si ya existe algun idCliente
+        // relacionado con el telefono y correo ingresados de los jTextFields
+        if (getClienteExistente(telefono, correo)) {
+            // Si existe idCliente relacionado con los datos, cancelar la inserción
+            return;
+        }
+
+        // Si no existe idCliente relacionado con los datos, continuar con la inserción de los nuevos datos
         // Consulta SQL para insertar en la tabla 'cliente'
         String insertQuery = "INSERT INTO cliente (nombre, apellidos, telefono, correo) VALUES (?, ?, ?, ?)";
 
@@ -101,6 +109,68 @@ public class RegistroCliente extends javax.swing.JFrame {
     }
 
     /**
+     * Método para verificar la existencia de un cliente en la base de datos.
+     * Verifica si ya existe algún idCliente relacionado con el telefono o
+     * correo proporcionados.
+     *
+     * @param telefono El número de teléfono del cliente a verificar.
+     * @param correo El correo electrónico del cliente a verificar.
+     * @return true si ya existe un cliente con los mismos datos, false de lo
+     * contrario.
+     */
+    private boolean getClienteExistente(String telefono, String correo) {
+        // Obtener la conexión a la base de datos
+        Connection connection = ConexionBD.getConnection();
+
+        // Consulta SQL para obtener el idCliente donde telefono = ? o correo = ?
+        String selectQuery = "SELECT idCliente FROM cliente WHERE telefono = ? OR correo = ?";
+
+        try {
+            // Crear una declaración preparada
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+
+            // Establecer valores para los parámetros en la declaración preparada
+            preparedStatement.setString(1, telefono);
+            preparedStatement.setString(2, correo);
+
+            // Ejecutar la consulta
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // Verificar si se encontró un cliente existente
+            if (resultSet.next()) {
+                // Si existe un cliente, mostrar el mensaje de error
+                JOptionPane.showMessageDialog(this,
+                        "Error, correo o telefono ya está ligado a otro cliente, por favor usa otros valores",
+                        "Error de Validación", JOptionPane.ERROR_MESSAGE);
+
+                // Limpiar campos de texto
+                jTextFieldNombreCliente.setText("");
+                jTextFieldApellidosCliente.setText("");
+                jTextFieldTelefonoCliente.setText("");
+                jTextFieldEmailCliente.setText("");
+
+                // Cerrar la declaración preparada y el resultado del conjunto
+                preparedStatement.close();
+                resultSet.close();
+
+                // Cancelar la inserción y devolver true
+                return true;
+            }
+
+            // Cerrar la declaración preparada y el resultado del conjunto
+            preparedStatement.close();
+            resultSet.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Manejar la excepción SQL según sea necesario
+        }
+
+        // No se encontró un cliente existente, devolver false
+        return false;
+    }
+
+    /**
      * Método para mostrar la información de un cliente registrado.
      *
      * @param connection La conexión a la base de datos.
@@ -132,10 +202,10 @@ public class RegistroCliente extends javax.swing.JFrame {
                 String clientInfo = "Información del Cliente:\nID: " + idCliente + "\nNombre: " + nombre
                         + "\nApellidos: " + apellidos + "\nTeléfono: " + telefono + "\nCorreo: " + correo;
 
-                // Show the information using JOptionPane
+                // Mostrar la informacion usando JOptionPane
                 JOptionPane.showMessageDialog(this, clientInfo, "Información del Cliente", JOptionPane.INFORMATION_MESSAGE);
 
-                // Dispose of the JFrame after the user clicks "OK"
+                // Cerrar el JFrame despues de que el usuario da click en OK
                 dispose();
             }
 
