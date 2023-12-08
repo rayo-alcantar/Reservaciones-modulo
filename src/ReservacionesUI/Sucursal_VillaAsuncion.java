@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author Pedro Quiroz
@@ -129,17 +130,37 @@ public class Sucursal_VillaAsuncion extends javax.swing.JFrame {
 
         // Establece las rutas para los recursos de la mesas, dependiendo de su disponibilidad
         switch (estado) {
-            case 1:
+              case 1: // Mesa Libre
                 iconPath = "/Recursos/MesaDisponible.png";
                 selectedIconPath = "/Recursos/MesaDisponibleS.png";
                 break;
-            case 2:
+            case 2: // Mesa Reservada
+                iconPath = "/Recursos/MesaProceso.png";
+                selectedIconPath = "/Recursos/MesaProcesoS.png";
+                break;
+            case 3: // Mesa Ocupada
                 iconPath = "/Recursos/MesaOcupada.png";
                 selectedIconPath = "/Recursos/MesaOcupadaS.png";
                 break;
-            case 3:
-                iconPath = "/Recursos/MesaProceso.png";
-                selectedIconPath = "/Recursos/MesaProcesoS.png";
+            case 4: // Mesa Pidiendo
+                iconPath = "/Recursos/MesaPidiendo.png";
+                selectedIconPath = "/Recurso/MesaPidiendoS.png";
+                break;
+            case 5: // Mesa Esperando Comida
+                iconPath = "/Recursos/MesaEsperaComida.png";
+                selectedIconPath = "/Recursos/MesaEsperaComidaS.png";
+                break;
+            case 6: // Mesa Servida
+                iconPath = "/Recursos/MesaServida.png";
+                selectedIconPath = "/Recursos/MesaServidaS.png";
+                break;
+            case 7: // Mesa Esperando cuenta
+                iconPath = "/Recursos/MesaEsperaCuenta.png";
+                selectedIconPath = "/Recursos/MesaEsperaCuentaS.png";
+                break;
+            case 8: // Mesa pagando
+                iconPath = "/Recursos/MesaPagando.png";
+                selectedIconPath = "/Recursos/MesaPagandoS.png";
                 break;
             default:
                 iconPath = "/Recursos/MesaDisponible.png";
@@ -218,6 +239,7 @@ public class Sucursal_VillaAsuncion extends javax.swing.JFrame {
         RegistroReservacion registroReservacion = new RegistroReservacion(selectedMesaArray);
         registroReservacion.setVisible(true);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -297,7 +319,7 @@ public class Sucursal_VillaAsuncion extends javax.swing.JFrame {
                     .addComponent(jCheckBoxMesa8, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jCheckBoxMesa9, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jCheckBoxMesa10, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 5, Short.MAX_VALUE))
+                .addGap(0, 8, Short.MAX_VALUE))
         );
         jPanelAreaCLayout.setVerticalGroup(
             jPanelAreaCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -337,7 +359,7 @@ public class Sucursal_VillaAsuncion extends javax.swing.JFrame {
                     .addGroup(jPanelAreaALayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jCheckBoxMesa2, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jCheckBoxMesa3, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 7, Short.MAX_VALUE))
+                .addGap(0, 3, Short.MAX_VALUE))
             .addGroup(jPanelAreaALayout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addComponent(jLabelAreaA, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -417,7 +439,7 @@ public class Sucursal_VillaAsuncion extends javax.swing.JFrame {
                         .addComponent(jCheckBoxMesa4, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCheckBoxMesa5, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 1, Short.MAX_VALUE))
             .addGroup(jPanelAreaBLayout.createSequentialGroup()
                 .addGap(114, 114, 114)
                 .addComponent(jLabelAreaB, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -460,23 +482,30 @@ public class Sucursal_VillaAsuncion extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanelAreaB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanelAreaC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanelAreaC, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(jPanelVillaAsuncionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelVillaAsuncionLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(jPanelVillaAsuncionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelDireccion)
-                            .addComponent(jLabelDireccionVillaAsuncion, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelLocal)
                             .addGroup(jPanelVillaAsuncionLayout.createSequentialGroup()
-                                .addComponent(jLabelTelefono)
+                                .addComponent(jLabelDireccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(286, 286, 286))
+                            .addComponent(jLabelDireccionVillaAsuncion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanelVillaAsuncionLayout.createSequentialGroup()
+                                .addComponent(jLabelLocal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(189, 189, 189))
+                            .addGroup(jPanelVillaAsuncionLayout.createSequentialGroup()
+                                .addComponent(jLabelTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabelNumeroTelefonico, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabelTelefono1)))
+                            .addGroup(jPanelVillaAsuncionLayout.createSequentialGroup()
+                                .addComponent(jLabelTelefono1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(44, 44, 44))))
                     .addGroup(jPanelVillaAsuncionLayout.createSequentialGroup()
                         .addGap(65, 65, 65)
-                        .addComponent(jButtonReservarMesas, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButtonReservarMesas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(66, 66, 66)))
+                .addContainerGap())
         );
         jPanelVillaAsuncionLayout.setVerticalGroup(
             jPanelVillaAsuncionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -486,27 +515,27 @@ public class Sucursal_VillaAsuncion extends javax.swing.JFrame {
                         .addGroup(jPanelVillaAsuncionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonRegresarSucursal1)
                             .addComponent(jLabelBienvenido, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanelVillaAsuncionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanelAreaA, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanelAreaB, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanelAreaC, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanelVillaAsuncionLayout.createSequentialGroup()
                         .addGap(42, 42, 42)
-                        .addComponent(jLabelDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabelDireccion, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelDireccionVillaAsuncion, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabelDireccionVillaAsuncion, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabelLocal, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelVillaAsuncionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelNumeroTelefonico, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabelTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelTelefono1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabelTelefono1, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
                         .addGap(84, 84, 84)
-                        .addComponent(jButtonReservarMesas)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButtonReservarMesas, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
+                        .addGap(103, 103, 103)))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -534,7 +563,7 @@ public class Sucursal_VillaAsuncion extends javax.swing.JFrame {
         // Verifica si todas las mesas seleccionadas están disponibles
         boolean allMesasAvailable = true;
         boolean MesaSelected = true;
-        
+
         for (Integer mesaId : selectedMesas) {
             int estado = getMesaEstadoById(mesaId);
             if (estado != 1) {
@@ -542,10 +571,10 @@ public class Sucursal_VillaAsuncion extends javax.swing.JFrame {
                 break;  //Se cierra la ventana si alguna mesa seleccionada no esta disponible.
             }
         }
-        if(jCheckBoxMesa1.isSelected()==false && jCheckBoxMesa2.isSelected()==false && jCheckBoxMesa3.isSelected()==false && jCheckBoxMesa4.isSelected()==false && jCheckBoxMesa5.isSelected()==false && jCheckBoxMesa6.isSelected()==false && jCheckBoxMesa7.isSelected()==false && jCheckBoxMesa8.isSelected()==false && jCheckBoxMesa9.isSelected()==false && jCheckBoxMesa10.isSelected()==false){
-            MesaSelected= false;
+        if (jCheckBoxMesa1.isSelected() == false && jCheckBoxMesa2.isSelected() == false && jCheckBoxMesa3.isSelected() == false && jCheckBoxMesa4.isSelected() == false && jCheckBoxMesa5.isSelected() == false && jCheckBoxMesa6.isSelected() == false && jCheckBoxMesa7.isSelected() == false && jCheckBoxMesa8.isSelected() == false && jCheckBoxMesa9.isSelected() == false && jCheckBoxMesa10.isSelected() == false) {
+            MesaSelected = false;
         }
-        if(MesaSelected){
+        if (MesaSelected) {
             if (allMesasAvailable) {
                 // Pregunta al usuario si está registrado
                 int option = JOptionPane.showConfirmDialog(null, "Necesitas estar registrado para hacer tu reservación. ¿Ya estás registrado en nuestro sistema?", "Registro", JOptionPane.YES_NO_OPTION);
@@ -562,10 +591,10 @@ public class Sucursal_VillaAsuncion extends javax.swing.JFrame {
                 // Muestra un mensaje de error si alguna mesa seleccionada no está disponible
                 JOptionPane.showMessageDialog(null, "Error, solo puedes reservar mesas que estén actualmente disponibles.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Error, Debe seleccionar una mesa para reservar.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-            
+
     }//GEN-LAST:event_jButtonReservarMesasActionPerformed
 
     /**

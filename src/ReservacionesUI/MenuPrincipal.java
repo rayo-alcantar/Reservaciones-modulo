@@ -50,7 +50,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         jLabelMensajeRegistracionCliente = new javax.swing.JLabel();
         jButtonAbrirRegistroCliente = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanelMenuPrincipal.setBackground(new java.awt.Color(32, 17, 72));
         jPanelMenuPrincipal.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 204, 253), 3, true));
@@ -129,7 +129,9 @@ public class MenuPrincipal extends javax.swing.JFrame {
         jLabelMensajeRegistracionCliente.setForeground(new java.awt.Color(0, 204, 253));
         jLabelMensajeRegistracionCliente.setText("Todavia no estas registrado en nuestro sistema?. Registrate ahora para poder reservar mesas y obtener premios con cada compra!");
 
+        jButtonAbrirRegistroCliente.setBackground(new java.awt.Color(85, 231, 255));
         jButtonAbrirRegistroCliente.setFont(new java.awt.Font("Barlow Condensed Medium", 0, 24)); // NOI18N
+        jButtonAbrirRegistroCliente.setForeground(new java.awt.Color(32, 17, 52));
         jButtonAbrirRegistroCliente.setText("¡Registrame!");
         jButtonAbrirRegistroCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

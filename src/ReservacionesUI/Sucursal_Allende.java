@@ -133,17 +133,37 @@ public class Sucursal_Allende extends javax.swing.JFrame {
 
         // Establece las rutas para los recursos de la mesas, dependiendo de su disponibilidad
         switch (estado) {
-            case 1:
+            case 1: // Mesa Libre
                 iconPath = "/Recursos/MesaDisponible.png";
                 selectedIconPath = "/Recursos/MesaDisponibleS.png";
                 break;
-            case 2:
+            case 2: // Mesa Reservada
+                iconPath = "/Recursos/MesaProceso.png";
+                selectedIconPath = "/Recursos/MesaProcesoS.png";
+                break;
+            case 3: // Mesa Ocupada
                 iconPath = "/Recursos/MesaOcupada.png";
                 selectedIconPath = "/Recursos/MesaOcupadaS.png";
                 break;
-            case 3:
-                iconPath = "/Recursos/MesaProceso.png";
-                selectedIconPath = "/Recursos/MesaProcesoS.png";
+            case 4: // Mesa Pidiendo
+                iconPath = "/Recursos/MesaPidiendo.png";
+                selectedIconPath = "/Recurso/MesaPidiendoS.png";
+                break;
+            case 5: // Mesa Esperando Comida
+                iconPath = "/Recursos/MesaEsperaComida.png";
+                selectedIconPath = "/Recursos/MesaEsperaComidaS.png";
+                break;
+            case 6: // Mesa Servida
+                iconPath = "/Recursos/MesaServida.png";
+                selectedIconPath = "/Recursos/MesaServidaS.png";
+                break;
+            case 7: // Mesa Esperando cuenta
+                iconPath = "/Recursos/MesaEsperaCuenta.png";
+                selectedIconPath = "/Recursos/MesaEsperaCuentaS.png";
+                break;
+            case 8: // Mesa pagando
+                iconPath = "/Recursos/MesaPagando.png";
+                selectedIconPath = "/Recursos/MesaPagandoS.png";
                 break;
             default:
                 iconPath = "/Recursos/MesaDisponible.png";

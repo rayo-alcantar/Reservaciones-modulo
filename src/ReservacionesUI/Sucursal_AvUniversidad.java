@@ -130,17 +130,37 @@ public class Sucursal_AvUniversidad extends javax.swing.JFrame {
 
         // Establece las rutas para los recursos de la mesas, dependiendo de su disponibilidad
         switch (estado) {
-            case 1:
+              case 1: // Mesa Libre
                 iconPath = "/Recursos/MesaDisponible.png";
                 selectedIconPath = "/Recursos/MesaDisponibleS.png";
                 break;
-            case 2:
+            case 2: // Mesa Reservada
+                iconPath = "/Recursos/MesaProceso.png";
+                selectedIconPath = "/Recursos/MesaProcesoS.png";
+                break;
+            case 3: // Mesa Ocupada
                 iconPath = "/Recursos/MesaOcupada.png";
                 selectedIconPath = "/Recursos/MesaOcupadaS.png";
                 break;
-            case 3:
-                iconPath = "/Recursos/MesaProceso.png";
-                selectedIconPath = "/Recursos/MesaProcesoS.png";
+            case 4: // Mesa Pidiendo
+                iconPath = "/Recursos/MesaPidiendo.png";
+                selectedIconPath = "/Recurso/MesaPidiendoS.png";
+                break;
+            case 5: // Mesa Esperando Comida
+                iconPath = "/Recursos/MesaEsperaComida.png";
+                selectedIconPath = "/Recursos/MesaEsperaComidaS.png";
+                break;
+            case 6: // Mesa Servida
+                iconPath = "/Recursos/MesaServida.png";
+                selectedIconPath = "/Recursos/MesaServidaS.png";
+                break;
+            case 7: // Mesa Esperando cuenta
+                iconPath = "/Recursos/MesaEsperaCuenta.png";
+                selectedIconPath = "/Recursos/MesaEsperaCuentaS.png";
+                break;
+            case 8: // Mesa pagando
+                iconPath = "/Recursos/MesaPagando.png";
+                selectedIconPath = "/Recursos/MesaPagandoS.png";
                 break;
             default:
                 iconPath = "/Recursos/MesaDisponible.png";
@@ -536,7 +556,7 @@ public class Sucursal_AvUniversidad extends javax.swing.JFrame {
         // Verifica si todas las mesas seleccionadas están disponibles
         boolean allMesasAvailable = true;
         boolean MesaSelected = true;
-        
+
         for (Integer mesaId : selectedMesas) {
             int estado = getMesaEstadoById(mesaId);
             if (estado != 1) {
@@ -545,10 +565,10 @@ public class Sucursal_AvUniversidad extends javax.swing.JFrame {
             }
         }
 
-        if(jCheckBoxMesa1.isSelected()==false && jCheckBoxMesa2.isSelected()==false && jCheckBoxMesa3.isSelected()==false && jCheckBoxMesa4.isSelected()==false && jCheckBoxMesa5.isSelected()==false && jCheckBoxMesa6.isSelected()==false && jCheckBoxMesa7.isSelected()==false && jCheckBoxMesa8.isSelected()==false && jCheckBoxMesa9.isSelected()==false && jCheckBoxMesa10.isSelected()==false){
-            MesaSelected= false;
+        if (jCheckBoxMesa1.isSelected() == false && jCheckBoxMesa2.isSelected() == false && jCheckBoxMesa3.isSelected() == false && jCheckBoxMesa4.isSelected() == false && jCheckBoxMesa5.isSelected() == false && jCheckBoxMesa6.isSelected() == false && jCheckBoxMesa7.isSelected() == false && jCheckBoxMesa8.isSelected() == false && jCheckBoxMesa9.isSelected() == false && jCheckBoxMesa10.isSelected() == false) {
+            MesaSelected = false;
         }
-        if(MesaSelected){
+        if (MesaSelected) {
             if (allMesasAvailable) {
                 // Pregunta al usuario si está registrado
                 int option = JOptionPane.showConfirmDialog(null, "Necesitas estar registrado para hacer tu reservación. ¿Ya estás registrado en nuestro sistema?", "Registro", JOptionPane.YES_NO_OPTION);
@@ -565,7 +585,7 @@ public class Sucursal_AvUniversidad extends javax.swing.JFrame {
                 // Muestra un mensaje de error si alguna mesa seleccionada no está disponible
                 JOptionPane.showMessageDialog(null, "Error, solo puedes reservar mesas que estén actualmente disponibles.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Error, Debe seleccionar una mesa para reservar.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButtonReservarMesasActionPerformed
